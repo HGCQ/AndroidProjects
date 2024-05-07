@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter @AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Photo {
 
@@ -15,10 +15,17 @@ public class Photo {
     @Column(name = "photo_id")
     private Long id;
 
+    private String imageName;
+
     @Lob
     private byte[] image;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="event_id")
     private Event event;
+
+    public Photo(String imageName, byte[] image) {
+        this.imageName = imageName;
+        this.image = image;
+    }
 }
