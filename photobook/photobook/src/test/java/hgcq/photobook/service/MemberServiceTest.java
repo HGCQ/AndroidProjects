@@ -11,14 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Transactional
-@Rollback(false)
 @SpringBootTest
+@Transactional
 class MemberServiceTest {
-    @Autowired MemberService memberService;
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
     
     @Test
     void 회원가입() {
@@ -29,6 +27,7 @@ class MemberServiceTest {
 
         assertEquals(member,findMember);
     }
+
     @Test
     void 중복검사() {
         Member memberA = new Member("이동현","ehdgus2580@naver.com","qwer1234");
@@ -37,11 +36,11 @@ class MemberServiceTest {
         try {
             Member memberB = new Member("전경섭","ehdgus2580@naver.com","asdf1234");
             memberService.join(memberB);
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e){
             return;
         }
-        Assertions.fail("예외 발생");
 
+        Assertions.fail("예외 발생");
     }
 
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Getter @AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Event {
 
@@ -27,4 +27,9 @@ public class Event {
 
     @OneToMany(mappedBy="event")
     private List<EventMember> eventMembers;
+
+    public Event(String name, LocalDate date) {
+        this.name = name;
+        this.date = date;
+    }
 }

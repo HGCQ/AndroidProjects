@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter @AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Friend {
 

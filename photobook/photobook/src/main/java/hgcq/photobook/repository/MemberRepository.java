@@ -2,6 +2,7 @@ package hgcq.photobook.repository;
 
 import hgcq.photobook.domain.Member;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberRepository {
 
+    @PersistenceContext
     private final EntityManager em;
 
     public Long save(Member member) {
