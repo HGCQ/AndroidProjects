@@ -15,6 +15,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Long join(Member member){
         List<String> emailList = memberRepository.findEmail();
 

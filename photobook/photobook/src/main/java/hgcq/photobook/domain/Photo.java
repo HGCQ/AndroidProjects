@@ -24,8 +24,9 @@ public class Photo {
     @JoinColumn(name="event_id")
     private Event event;
 
-    public Photo(String imageName, byte[] image) {
+    public Photo(String imageName, byte[] image, Event event) {
         this.imageName = imageName;
         this.image = image;
+        this.event = event;
     }
 }
