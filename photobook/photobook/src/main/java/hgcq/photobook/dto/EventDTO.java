@@ -6,21 +6,30 @@ import java.time.LocalDate;
 public class EventDTO implements Serializable {
 
     private String name;
-    private LocalDate date;
+    private String date;
+    private String content;
 
     public EventDTO() {
     }
 
-    public EventDTO(String name, LocalDate date) {
+    public EventDTO(String name, String date) {
         this.name = name;
         this.date = date;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getName() {
         return name;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
