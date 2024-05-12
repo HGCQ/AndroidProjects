@@ -3,6 +3,7 @@ package hgcq.photobook.service;
 import hgcq.photobook.domain.Member;
 import hgcq.photobook.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class MemberService {
      * @return 회원 id
      */
     @Transactional
+    @Synchronized
     public Long join(Member member) {
         List<String> emailList = memberRepository.findEmail();
 
@@ -45,9 +47,9 @@ public class MemberService {
         if (!emails.contains(email)) {
             return null;
         }
-        Member one = memberRepository.findOne(email);
-        if (one.getPassword().equals(password)) {
-            return one;
+        Member find = memberRepository.findOne(email);
+        if (find.getPassword().equals(password)) {
+            return find;
         } else {
             return null;
         }

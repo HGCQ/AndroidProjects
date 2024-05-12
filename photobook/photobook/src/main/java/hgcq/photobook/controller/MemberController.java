@@ -3,7 +3,6 @@ package hgcq.photobook.controller;
 import hgcq.photobook.domain.Member;
 import hgcq.photobook.dto.MemberDTO;
 import hgcq.photobook.service.MemberService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,13 +37,6 @@ public class MemberController {
 
             HttpSession session = request.getSession();
             session.setAttribute("member", loginMemberDTO);
-
-            String sessionId = UUID.randomUUID().toString();
-
-            Cookie cookie = new Cookie("session_id", sessionId);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            response.addCookie(cookie);
 
             return ResponseEntity.ok(loginMemberDTO);
         } else {

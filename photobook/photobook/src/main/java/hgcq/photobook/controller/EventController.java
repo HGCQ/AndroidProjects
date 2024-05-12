@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -33,7 +34,7 @@ public class EventController {
         if (session != null) {
             MemberDTO loginMember = (MemberDTO) session.getAttribute("member");
             if (loginMember != null) {
-                Event event = new Event(eventDTO.getName(), eventDTO.getDate());
+                Event event = new Event(eventDTO.getName(), LocalDate.parse(eventDTO.getDate()));
                 Member member = memberService.findOne(loginMember.getEmail());
                 if (member != null) {
                     eventService.createEvent(event, member);
@@ -52,7 +53,7 @@ public class EventController {
             if (loginMember != null) {
                 Member member = memberService.findOne(loginMember.getEmail());
                 if (member != null) {
-                    Event event = eventService.getEvent(eventDTO.getDate(), member);
+                    Event event = eventService.getEvent(LocalDate.parse(eventDTO.getDate()), member);
                     if (event != null) {
                         eventService.deleteEvent(event.getDate(), member);
                         return ResponseEntity.ok().body("Event Delete Success");
@@ -72,7 +73,7 @@ public class EventController {
             if (loginMember != null) {
                 Member member = memberService.findOne(loginMember.getEmail());
                 if (member != null) {
-                    Event event = eventService.getEvent(eventDTO.getDate(), member);
+                    Event event = eventService.getEvent(LocalDate.parse(eventDTO.getDate()), member);
                     Member friend = memberService.findOne(memberDTO.getEmail());
                     if (event != null && friend != null) {
                         eventService.addMemberToEvent(event.getDate(), friend);

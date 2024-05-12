@@ -80,6 +80,16 @@ public class EventService {
     }
 
     /**
+     * 이벤트 조회
+     *
+     * @param date 날짜
+     * @return 이벤트
+     */
+    public Event getEvent(LocalDate date) {
+        return eventRepository.findEventByDate(date);
+    }
+
+    /**
      * 이벤트에 회원 추가
      *
      * @param date   이벤트 날짜
