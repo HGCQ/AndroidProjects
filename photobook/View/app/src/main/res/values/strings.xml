@@ -9,4 +9,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string-array name="email_domains">
+        <item>선택</item>
+        <item>gmail.com</item>
+        <item>naver.com</item>
+        <item>daum.net</item>
+        <item>yahoo.com</item>
+    </string-array>
+
 </resources>
