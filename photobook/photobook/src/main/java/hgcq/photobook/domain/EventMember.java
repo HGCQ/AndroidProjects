@@ -1,5 +1,6 @@
 package hgcq.photobook.domain;
 
+import hgcq.photobook.dto.EventMemberId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@IdClass(EventMemberId.class)
 public class EventMember {
 
     @Id
@@ -20,10 +22,15 @@ public class EventMember {
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="event_id")
+    @JoinColumn(name = "event_id", insertable = false, updatable = false)
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="member_id")
+    @JoinColumn(name = "member_id", insertable = false, updatable = false)
     private Member member;
+
+    public EventMember(Long eventId, Long memberId) {
+        this.eventId = eventId;
+        this.memberId = memberId;
+    }
 }
