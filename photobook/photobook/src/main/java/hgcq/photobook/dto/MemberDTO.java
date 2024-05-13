@@ -1,4 +1,4 @@
-package hgcq.model.dto;
+package hgcq.photobook.dto;
 
 import java.io.Serializable;
 
@@ -9,6 +9,11 @@ public class MemberDTO implements Serializable {
     private String password;
 
     public MemberDTO() {
+    }
+
+    public MemberDTO(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public MemberDTO(String name, String email, String password) {
@@ -38,4 +43,3 @@ public class MemberDTO implements Serializable {
                 '}';
     }
 }
-

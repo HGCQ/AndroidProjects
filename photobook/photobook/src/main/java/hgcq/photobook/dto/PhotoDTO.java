@@ -1,8 +1,10 @@
-package hgcq.model.dto;
+package hgcq.photobook.dto;
+
+import lombok.Getter;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
+@Getter
 public class PhotoDTO implements Serializable {
 
     private String imageName;
@@ -14,27 +16,10 @@ public class PhotoDTO implements Serializable {
     public PhotoDTO() {
     }
 
-    public PhotoDTO(String imageName, String date) {
-        this.imageName = imageName;
-        this.date = date;
-    }
-
     public PhotoDTO(String imageName, byte[] image, String date) {
         this.imageName = imageName;
         this.image = image;
         this.date = date;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public String getDate() {
-        return date;
     }
 
     @Override
