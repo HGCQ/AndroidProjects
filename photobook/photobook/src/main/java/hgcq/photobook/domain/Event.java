@@ -25,6 +25,10 @@ public class Event {
 
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @OneToMany(mappedBy = "event")
     private List<Photo> photos;
 
@@ -36,10 +40,10 @@ public class Event {
         this.date = date;
     }
 
-    public Event(String name, LocalDate date, String content) {
+    public Event(String name, LocalDate date, Member member) {
         this.name = name;
         this.date = date;
-        this.content = content;
+        this.member = member;
     }
 
     public void setContent(String content) {

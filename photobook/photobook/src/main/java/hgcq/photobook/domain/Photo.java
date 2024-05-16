@@ -17,16 +17,15 @@ public class Photo {
 
     private String imageName;
 
-    @Lob
-    private byte[] image;
+    private String path;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="event_id")
     private Event event;
 
-    public Photo(String imageName, byte[] image, Event event) {
+    public Photo(String imageName, String path, Event event) {
         this.imageName = imageName;
-        this.image = image;
+        this.path = path;
         this.event = event;
     }
 }
