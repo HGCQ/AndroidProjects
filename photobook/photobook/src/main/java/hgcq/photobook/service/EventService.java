@@ -19,6 +19,7 @@ import java.util.Objects;
  * 이벤트 생성
  * 이벤트 삭제
  * 이벤트 친구 초대
+ * 이벤트 내용 수정
  * 이벤트 검색 (날짜, 이름)
  * 이벤트 친구 필터로 검색
  * 이벤트 리스트
@@ -113,6 +114,39 @@ public class EventService {
     }
 
     /**
+     * 이벤트 내용 설정
+     *
+     * @param event  이벤트
+     * @param member 회원
+     * @return 내용
+     */
+    @Transactional
+    public String updateContent(LocalDate date, Member member, String content) {
+        if (member == null || member.getId() == null) {
+            log.error("내용 설정 실패 : 회원이 존재하지 않음");
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+
+        Event findEvent = searchEventByDate(date, member);
+
+        if (findEvent == null) {
+            log.error("내용 설정 실패 : 이벤트가 존재하지 않음");
+            throw new IllegalArgumentException("이벤트가 존재하지 않습니다.");
+        }
+
+        if (content == null) {
+            log.error("내용 설정 실패 : 내용이 존재하지 않음");
+            throw new IllegalArgumentException("내용이 존재하지 않습니다.");
+        }
+
+        findEvent.setContent(content);
+        eventRepository.save(findEvent);
+
+        log.debug("내용 설정 성공");
+        return findEvent.getContent();
+    }
+
+    /**
      * 이벤트 날짜로 검색
      *
      * @param date   날짜
@@ -131,26 +165,33 @@ public class EventService {
             log.error("이벤트 검색 실패 : 이벤트가 존재하지 않음");
             throw new IllegalArgumentException("이벤트가 존재하지 않습니다.");
         }
-        
+
         log.debug("이벤트 검색 성공");
         return findEvent;
     }
 
-    public Event searchEventByName(String name, Member member) {
+    /**
+     * 이름으로 검색
+     *
+     * @param name   이름
+     * @param member 회원
+     * @return 이벤트 리스트
+     */
+    public List<Event> searchEventByName(String name, Member member) {
         if (member == null || member.getId() == null) {
             log.error("이벤트 검색 실패 : 회원이 존재하지 않음");
             throw new IllegalArgumentException("회원이 존재하지 않습니다.");
         }
 
-        Event findEvent = eventMemberRepository.findEventByName(name, member);
+        List<Event> findEvents = eventMemberRepository.findEventByName(name, member);
 
-        if (findEvent == null) {
+        if (findEvents == null) {
             log.error("이벤트 검색 실패 : 이벤트가 존재하지 않음");
             throw new IllegalArgumentException("이벤트가 존재하지 않습니다.");
         }
 
         log.debug("이벤트 검색 성공");
-        return findEvent;
+        return findEvents;
     }
 
     /**
