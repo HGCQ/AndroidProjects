@@ -76,13 +76,13 @@ public class EventMemberRepository {
      *
      * @param name   이벤트 이름
      * @param member 회원
-     * @return 이벤트
+     * @return 이벤트 리스트
      */
-    public Event findEventByName(String name, Member member) {
+    public List<Event> findEventByName(String name, Member member) {
         return em.createQuery("select em.event from EventMember em where em.event.name = :name and em.member = :member", Event.class)
                 .setParameter("name", name)
                 .setParameter("member", member)
-                .getSingleResult();
+                .getResultList();
     }
 
     /**
