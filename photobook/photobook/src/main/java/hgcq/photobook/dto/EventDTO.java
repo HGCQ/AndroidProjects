@@ -17,6 +17,12 @@ public class EventDTO implements Serializable {
         this.date = date;
     }
 
+    public EventDTO(String name, String date, String content) {
+        this.name = name;
+        this.date = date;
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }

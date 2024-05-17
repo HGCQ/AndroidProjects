@@ -1,7 +1,11 @@
 package hgcq.photobook.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
+@Getter
 public class MemberDTO implements Serializable {
 
     private String name;
@@ -16,30 +20,18 @@ public class MemberDTO implements Serializable {
         this.password = password;
     }
 
-    public MemberDTO(String name, String email, String password) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override
     public String toString() {
         return "MemberDTO{" +
                 "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+                ", email='" + email;
     }
 }
