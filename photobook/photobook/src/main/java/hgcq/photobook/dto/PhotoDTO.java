@@ -9,10 +9,16 @@ import java.io.Serializable;
 public class PhotoDTO implements Serializable {
 
     private String date;
+    private String imageName;
 
     private MultipartFile image;
 
     public PhotoDTO() {
+    }
+
+    public PhotoDTO(String date, String imageName) {
+        this.date = date;
+        this.imageName = imageName;
     }
 
     public PhotoDTO(String date, MultipartFile image) {
