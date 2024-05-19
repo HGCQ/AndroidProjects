@@ -1,7 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="#9AC89D9D"
@@ -9,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="922dp"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
         android:layout_gravity="center"
         android:background="#FBF2F2"
         app:srcCompat="@drawable/loading" />
