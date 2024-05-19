@@ -33,11 +33,11 @@ public class PhotoController {
     private final EventService eventService;
     private final MemberService memberService;
 
-    private String directoryPath = "src" + File.pathSeparator
-            + "main" + File.pathSeparator
-            + "resources" + File.pathSeparator
-            + "static" + File.pathSeparator
-            + "images" + File.pathSeparator;
+    private String directoryPath = "src" + File.separator
+            + "main" + File.separator
+            + "resources" + File.separator
+            + "static" + File.separator
+            + "images" + File.separator;
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPhoto(@ModelAttribute PhotoDTO photoDTO
@@ -55,7 +55,7 @@ public class PhotoController {
                     if (image != null && !image.isEmpty()) {
                         try {
                             Event findEvent = eventService.searchEventByDate(LocalDate.parse(photoDTO.getDate()), member);
-                            String newPath = directoryPath + findEvent.getId() + File.pathSeparator;
+                            String newPath = directoryPath + findEvent.getId() + File.separator;
                             File directory = new File(newPath);
 
                             if (!directory.exists()) {
@@ -100,7 +100,7 @@ public class PhotoController {
 
                         if (isDelete) {
                             try {
-                                String newPath = directoryPath + findEvent.getId() + File.pathSeparator;
+                                String newPath = directoryPath + findEvent.getId() + File.separator;
                                 Path path = Paths.get(newPath + photoDTO.getImage());
 
                                 Files.deleteIfExists(path);
