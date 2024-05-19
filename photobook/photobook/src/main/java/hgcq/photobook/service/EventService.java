@@ -116,8 +116,9 @@ public class EventService {
     /**
      * 이벤트 내용 설정
      *
-     * @param event  이벤트
-     * @param member 회원
+     * @param date    날짜
+     * @param member  회원
+     * @param content 내용
      * @return 내용
      */
     @Transactional
