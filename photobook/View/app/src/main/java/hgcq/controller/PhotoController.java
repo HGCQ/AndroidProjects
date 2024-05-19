@@ -2,78 +2,35 @@ package hgcq.controller;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import hgcq.callback.PhotoCallback;
+import hgcq.config.NetworkClient;
 import hgcq.model.dto.PhotoDTO;
 import hgcq.model.service.PhotoService;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoController {
 
-    private PhotoService ps;
+    private PhotoService photoService;
     private Context context; // 액티비티
 
-    private final String serverIp = ""; // 서버 주소
-
     public PhotoController(Context context) {
+        NetworkClient client = NetworkClient.getInstance(context.getApplicationContext());
+        photoService = client.getPhotoService();
         this.context = context;
-
-        // 쿠키 생성
-        ClearableCookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
-        // Http 메시지 로그
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Http 커넥션 설정
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .cookieJar(cookieJar)
-                .addInterceptor(logging)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .build();
-
-        // 서버와 연결
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(serverIp)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ps = retrofit.create(PhotoService.class);
     }
 
 
@@ -94,7 +51,7 @@ public class PhotoController {
         RequestBody datePart = RequestBody.create(MultipartBody.FORM, date);
         RequestBody namePart = RequestBody.create(MultipartBody.FORM, imageName);
 
-        Call<ResponseBody> call = ps.uploadPhoto(datePart, namePart, body);
+        Call<ResponseBody> call = photoService.uploadPhoto(datePart, namePart, body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -124,7 +81,7 @@ public class PhotoController {
     public void deletePhoto(String imageName, String date) {
         PhotoDTO photoDTO = new PhotoDTO(imageName, date);
 
-        Call<ResponseBody> call = ps.deletePhoto(photoDTO);
+        Call<ResponseBody> call = photoService.deletePhoto(photoDTO);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -152,7 +109,7 @@ public class PhotoController {
      * @param callback  콜백 인터페이스
      */
     public void getPhotos(String eventDate, PhotoCallback callback) {
-        Call<List<String>> call = ps.getPhotos(eventDate);
+        Call<List<String>> call = photoService.getPhotos(eventDate);
         call.enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
@@ -185,7 +142,4 @@ public class PhotoController {
         return path;
     }
 
-    public String getServerIp() {
-        return serverIp;
-    }
 }
