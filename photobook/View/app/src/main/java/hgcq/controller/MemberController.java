@@ -2,20 +2,24 @@ package hgcq.controller;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.HttpCookie;
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import hgcq.callback.MemberCallback;
 import hgcq.model.dto.MemberDTO;
 import hgcq.model.service.MemberService;
-import okhttp3.JavaNetCookieJar;
+import hgcq.model.service.PhotoService;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
-import okhttp3.internal.http.HttpHeaders;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,27 +30,35 @@ public class MemberController {
     private MemberService memberService;
     private Context context;
 
-    public MemberController(MemberService memberService, Context context) {
-        this.memberService = memberService;
+    private final String serverIp = ""; // 서버 주소
+
+
+    public MemberController(Context context) {
         this.context = context;
-    };
+        // 쿠키 생성
+        ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
 
-    ///MemberController() 일단 건들지 말기
-    public  MemberController() {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        // Http 메시지 로그
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        OkHttpClient okHttpClient = builder
-                .cookieJar(new JavaNetCookieJar(cookieManager))
+        // Http 커넥션 설정
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(cookieJar)
+                .addInterceptor(logging)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
 
-
+        // 서버와 연결
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("서버 주소")
+                .baseUrl(serverIp)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         memberService = retrofit.create(MemberService.class);
 
 
@@ -54,22 +66,25 @@ public class MemberController {
 
     public void createMember(MemberDTO memberDto) {
         //
-        Call<ResponseBody> call = memberService.createMember(memberDto);
+        Call<ResponseBody> call = memberService.joinMember(memberDto);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("TAG", "성공");
+                    Toast.makeText(context, "회원 가입 성공!", Toast.LENGTH_SHORT).show();
+                    Log.d("회원 가입 성공!", "성공" + response.code());
 
                 } else {
-                    Log.e("TAG", "에러:" + response.code());
+                    Toast.makeText(context, "회원 가입 실패!", Toast.LENGTH_SHORT).show();
+                    Log.e("회원 가입 실패!", "에러:" + response.code());
                 }
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("TAG", "에러", t);
+                Toast.makeText(context, "회원가입:서버에서 응답받지 못했어용 ㅠㅠ", Toast.LENGTH_SHORT).show();
+                Log.e("회원가입:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
             }
         });
     }
@@ -81,36 +96,22 @@ public class MemberController {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("TAG", "성공");
-                    // 쿠키 저장
-                    saveCookie(response.headers().get("Set-Cookie"));
+                    Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                    Log.d("로그인 성공!", "성공" + response.code());
 
                 } else {
-                    Log.e("TAG", "에러:" + response.code());
+                    Toast.makeText(context, "로그인 실패ㅜㅜ", Toast.LENGTH_SHORT).show();
+                    Log.e("로그인 실패ㅜㅜ", "에러:" + response.code());
                 }
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("TAG", "에러", t);
+                Toast.makeText(context, "사진 업로드 성공", Toast.LENGTH_SHORT).show();
+                Log.e("로그인:서버에서 응답받지 못했어용ㅜㅜ", t.getMessage());
             }
         });
-    }
-
-    private void saveCookie(String cookieHeader) {
-
-        List<HttpCookie> cookies = HttpCookie.parse(cookieHeader);//HttpCookieparse.parse했더니 에러 ->HttpCookie변경
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("cookies", Context.MODE_PRIVATE);
-        //SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        for (HttpCookie cookie : cookies) {
-            editor.putString(cookie.getName(), cookie.getValue());
-        }
-        editor.apply();
     }
 
     //updateMember
@@ -120,21 +121,121 @@ public class MemberController {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("TAG", "성공");
+                    Toast.makeText(context, "회원 정보 수정 완료!", Toast.LENGTH_SHORT).show();
+                    Log.d("회원 정보 수정 완료!", "성공" + response.code());
 
                 } else {
-                    Log.e("TAG", "에러:" + response.code());
+                    Toast.makeText(context, "회원 정보 수정 실패 ㅜㅜ", Toast.LENGTH_SHORT).show();
+                    Log.e("회원 정보 수정 실패 ㅜㅜ", "에러:" + response.code());
                 }
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("TAG", "에러", t);
+
+                Toast.makeText(context, "회원 정보 수정:서버에서 응답받지 못했어용", Toast.LENGTH_SHORT).show();
+                Log.e("회원 정보 수정:서버에서 응답받지 못했어용", t.getMessage());
             }
         });
     }
 
+    public void logoutMember(MemberDTO memberDto) {
+        //
+        Call<ResponseBody> call = memberService.logoutMember(memberDto);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "로그 아웃 성공!", Toast.LENGTH_SHORT).show();
+                    Log.d("로그 아웃 성공!", "성공" + response.code());
 
+                } else {
+                    Toast.makeText(context, "로그아웃  실패!", Toast.LENGTH_SHORT).show();
+                    Log.e("로그아웃  실패!", "에러:" + response.code());
+                }
 
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "로그아웃:서버에서 응답받지 못했어용 ㅠㅠ", Toast.LENGTH_SHORT).show();
+                Log.e("로그아웃:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
+            }
+        });
+    }
+
+    public void addFriend(MemberDTO memberDto) {
+        //
+        Call<ResponseBody> call = memberService.addFriend(memberDto);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "친구 추가 성공!", Toast.LENGTH_SHORT).show();
+                    Log.d("친구 추가 성공!", "성공" + response.code());
+
+                } else {
+                    Toast.makeText(context, "친구 추가 실패!", Toast.LENGTH_SHORT).show();
+                    Log.e("친구 추가 실패!", "에러:" + response.code());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "친구 추가:서버에서 응답받지 못했어용 ㅠㅠ", Toast.LENGTH_SHORT).show();
+                Log.e("친구 추가:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
+            }
+        });
+    }
+
+    public void deleteFriend(MemberDTO memberDto) {
+        //
+        Call<ResponseBody> call = memberService.deleteFriend(memberDto);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "친구 삭제 성공!", Toast.LENGTH_SHORT).show();
+                    Log.d("친구 삭제 성공!", "성공" + response.code());
+
+                } else {
+                    Toast.makeText(context, "친구 삭제 실패!", Toast.LENGTH_SHORT).show();
+                    Log.e("친구 삭제 실패!", "에러:" + response.code());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "친구 삭제:서버에서 응답받지 못했어용 ㅠㅠ", Toast.LENGTH_SHORT).show();
+                Log.e("친구 삭제:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
+            }
+        });
+    }
+
+    public void friendList(MemberCallback callback) {
+        Call<List<MemberDTO>> call = memberService.friendList();
+
+        call.enqueue(new Callback<List<MemberDTO>>() {
+            @Override
+            public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("친구리스트 조회 성공", "성공" + response.code());
+                    callback.onSuccess(response.body());
+                } else {
+                    Log.e("친구리스트 조회 실패", "에러:" + response.code());
+                    callback.onError("에러:" + response.code());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<MemberDTO>> call, Throwable t) {
+                Log.e("친구리스트 조회:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
+                callback.onError(t.getMessage());
+            }
+        });
+    }
 }
