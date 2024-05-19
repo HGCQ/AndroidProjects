@@ -4,9 +4,10 @@ import hgcq.photobook.domain.Member;
 import hgcq.photobook.dto.MemberDTO;
 import hgcq.photobook.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,13 @@ import java.util.List;
 @RequestMapping("/member")
 public class MemberController {
 
+    private static final Logger log = LoggerFactory.getLogger(MemberController.class);
+
     private final MemberService memberService;
 
     // 테스트 완료
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO, HttpServletResponse response) {
+    public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO) {
         Member member = new Member(memberDTO.getName(), memberDTO.getEmail(), memberDTO.getPassword());
         Long id = memberService.join(member);
 
@@ -34,7 +37,7 @@ public class MemberController {
     // 테스트 완료
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberDTO member,
-                                   HttpServletResponse response, HttpServletRequest request) {
+                                   HttpServletRequest request) {
         Member loginMember = memberService.login(member.getEmail(), member.getPassword());
 
         if (loginMember != null) {
@@ -42,6 +45,7 @@ public class MemberController {
 
             HttpSession session = request.getSession();
             session.setAttribute("member", loginMemberDTO);
+            log.debug("세션 생성");
 
             return ResponseEntity.ok(loginMemberDTO);
         } else {
@@ -56,6 +60,7 @@ public class MemberController {
 
         if (session != null) {
             session.invalidate();
+            log.debug("세션 종료");
             return ResponseEntity.ok("로그아웃 성공");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 중이 아닙니다.");
@@ -153,6 +158,8 @@ public class MemberController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("친구 리스트 조회 실패");
     }
+
+    // -- 유틸리티 메소드 --
 
     @ExceptionHandler(IllegalArgumentException.class)
     private ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
