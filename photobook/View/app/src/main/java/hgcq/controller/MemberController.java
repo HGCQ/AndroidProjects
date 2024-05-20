@@ -112,8 +112,8 @@ public class MemberController {
         });
     }
 
-    public void logoutMember(MemberDTO memberDto) {
-        Call<ResponseBody> call = memberService.logoutMember(memberDto);
+    public void logoutMember() {
+        Call<ResponseBody> call = memberService.logoutMember();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

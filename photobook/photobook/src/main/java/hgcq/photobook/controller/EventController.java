@@ -80,7 +80,7 @@ public class EventController {
                     Event event = eventService.searchEventByDate(LocalDate.parse(eventDTO.getDate()), member);
 
                     if (event != null) {
-                        eventService.updateContent(LocalDate.parse(eventDTO.getDate()), member, eventDTO.getContent());
+                        eventService.updateContent(LocalDate.parse(eventDTO.getDate()), member, eventDTO);
                         return ResponseEntity.ok().body("이벤트 수정 성공");
                     }
                 }

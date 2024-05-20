@@ -3,6 +3,7 @@ package hgcq.photobook.service;
 import hgcq.photobook.domain.Event;
 import hgcq.photobook.domain.EventMember;
 import hgcq.photobook.domain.Member;
+import hgcq.photobook.dto.EventDTO;
 import hgcq.photobook.repository.EventMemberRepository;
 import hgcq.photobook.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -118,11 +119,11 @@ public class EventService {
      *
      * @param date    날짜
      * @param member  회원
-     * @param content 내용
+     * @param eventDTO 수정된 이벤트
      * @return 내용
      */
     @Transactional
-    public String updateContent(LocalDate date, Member member, String content) {
+    public String updateContent(LocalDate date, Member member, EventDTO eventDTO) {
         if (member == null || member.getId() == null) {
             log.error("내용 설정 실패 : 회원이 존재하지 않음");
             throw new IllegalArgumentException("회원이 존재하지 않습니다.");
@@ -135,12 +136,18 @@ public class EventService {
             throw new IllegalArgumentException("이벤트가 존재하지 않습니다.");
         }
 
-        if (content == null) {
+        if (eventDTO.getName() == null) {
+            log.error("내용 설정 실패 : 이름이 존재하지 않음");
+            throw new IllegalArgumentException("이름이 존재하지 않습니다.");
+        }
+        
+        if (eventDTO.getContent() == null) {
             log.error("내용 설정 실패 : 내용이 존재하지 않음");
             throw new IllegalArgumentException("내용이 존재하지 않습니다.");
         }
 
-        findEvent.setContent(content);
+        findEvent.setContent(eventDTO.getContent());
+        findEvent.setName(eventDTO.getName());
         eventRepository.save(findEvent);
 
         log.debug("내용 설정 성공");

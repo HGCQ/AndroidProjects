@@ -124,6 +124,14 @@ public class NetworkClient {
         }
     }
 
+    public boolean isLogin() {
+        NetworkClient client = NetworkClient.getInstance(app);
+
+        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+
+        return !cookies.isEmpty();
+    }
+
     public void deleteCookie() {
         NetworkClient client = NetworkClient.getInstance(app);
 
