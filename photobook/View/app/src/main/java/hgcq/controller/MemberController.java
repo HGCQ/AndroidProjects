@@ -29,12 +29,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MemberController {
+
+    private NetworkClient client;
     private MemberService memberService;
     private Context context;
 
 
     public MemberController(Context context) {
-        NetworkClient client = NetworkClient.getInstance(context.getApplicationContext());
+        client = NetworkClient.getInstance(context.getApplicationContext());
         memberService = client.getMemberService();
         this.context = context;
     }
@@ -70,6 +72,7 @@ public class MemberController {
                     Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show();
                     Log.d("로그인 성공!", "성공" + response.code());
                     callback.onSuccess(true);
+                    client.saveCookie();
                 } else {
                     Toast.makeText(context, "로그인 실패ㅜㅜ", Toast.LENGTH_SHORT).show();
                     Log.e("로그인 실패ㅜㅜ", "에러:" + response.code());
@@ -117,6 +120,7 @@ public class MemberController {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "로그 아웃 성공!", Toast.LENGTH_SHORT).show();
                     Log.d("로그 아웃 성공!", "성공" + response.code());
+                    client.deleteCookie();
                 } else {
                     Toast.makeText(context, "로그아웃  실패!", Toast.LENGTH_SHORT).show();
                     Log.e("로그아웃  실패!", "에러:" + response.code());
