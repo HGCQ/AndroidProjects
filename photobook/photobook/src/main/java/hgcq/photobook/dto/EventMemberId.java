@@ -1,27 +1,15 @@
 package hgcq.photobook.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter @Setter
 public class EventMemberId implements Serializable {
     private Long eventId;
     private Long memberId;
-
-    public Long getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
 
     @Override
     public boolean equals(Object o) {
