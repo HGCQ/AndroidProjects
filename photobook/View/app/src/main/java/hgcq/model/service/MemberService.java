@@ -23,7 +23,7 @@ public interface MemberService {
     Call<ResponseBody> updateMember(@Body MemberDTO memberDTO);
 
     @POST("/member/logout")
-    Call<ResponseBody> logoutMember(@Body MemberDTO memberDTO);
+    Call<ResponseBody> logoutMember();
 
     @POST("/member/friend/add")
     Call<ResponseBody> addFriend(@Body MemberDTO memberDTO);
