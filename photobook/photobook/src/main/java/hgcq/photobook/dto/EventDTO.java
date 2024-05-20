@@ -1,4 +1,4 @@
-package hgcq.model.dto;
+package hgcq.photobook.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,6 +10,11 @@ public class EventDTO implements Serializable {
     private String content;
 
     public EventDTO() {
+    }
+
+    public EventDTO(String name, String date) {
+        this.name = name;
+        this.date = date;
     }
 
     public EventDTO(String name, String date, String content) {

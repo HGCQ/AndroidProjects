@@ -1,5 +1,6 @@
 package hgcq.photobook.repository;
 
+import hgcq.photobook.domain.Event;
 import hgcq.photobook.domain.Photo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,11 +18,12 @@ public class PhotoRepository {
 
     /**
      * 사진 저장
-     * @param photo 저장할 사진
-     * @return photo_id
+     *
+     * @param photo 사진
+     * @return 사진 id
      */
     public Long save(Photo photo) {
-        if(photo.getId() == null) {
+        if (photo.getId() == null) {
             em.persist(photo);
         } else {
             em.merge(photo);
@@ -29,34 +31,50 @@ public class PhotoRepository {
         return photo.getId();
     }
 
+
     /**
      * 사진 삭제
-     * @param id photo_id
-     * @return photo_id
+     *
+     * @param photo 사진
      */
-    public Long delete(Long id) {
-        Photo findPhoto = findOne(id);
-        em.remove(findPhoto);
-        return id;
+    public void delete(Photo photo) {
+        em.remove(photo);
     }
 
     /**
-     * id 값으로 사진 검색
-     * @param id photo_id
+     * 사진 하나 검색
+     *
+     * @param imageName 사진 이름
      * @return 사진
      */
-    public Photo findOne(Long id) {
-        return em.find(Photo.class, id);
+    public Photo findOne(String imageName, Event event) {
+        return em.createQuery("select p from Photo p where p.imageName = :imageName and p.event = :event", Photo.class)
+                .setParameter("imageName", imageName)
+                .setParameter("event", event)
+                .getSingleResult();
     }
 
     /**
-     * 이벤트 별 사진 리스트
-     * @param eventId event_id
-     * @return 이벤트 id에 있는 모든 사진 리스트
+     * 사진 리스트 조회
+     *
+     * @param event 이벤트
+     * @return 사진 리스트
      */
-    public List<Photo> findAll(Long eventId) {
-        return em.createQuery("select p from Photo p where p.event.id = :eventId", Photo.class)
-                .setParameter("eventId", eventId)
+    public List<String> findAll(Event event) {
+        return em.createQuery("select p.path from Photo p where p.event = :event", String.class)
+                .setParameter("event", event)
+                .getResultList();
+    }
+
+    /**
+     * 사진 이름 리스트 조회
+     *
+     * @param event 이벤트
+     * @return 사진 이름 리스트
+     */
+    public List<String> findImageNames(Event event) {
+        return em.createQuery("select p.imageName from Photo p where p.event = :event", String.class)
+                .setParameter("event", event)
                 .getResultList();
     }
 }
