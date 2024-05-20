@@ -12,6 +12,11 @@ public class EventDTO implements Serializable {
     public EventDTO() {
     }
 
+    public EventDTO(String name, String date) {
+        this.name = name;
+        this.date = date;
+    }
+
     public EventDTO(String name, String date, String content) {
         this.name = name;
         this.date = date;
@@ -22,16 +27,24 @@ public class EventDTO implements Serializable {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getName() {
         return name;
     }
 
     public String getDate() {
         return date;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override

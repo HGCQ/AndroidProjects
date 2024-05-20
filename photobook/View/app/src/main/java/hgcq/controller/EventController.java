@@ -39,7 +39,6 @@ public class EventController {
         this.context = context;
     }
 
-
     public void createEvent(EventDTO eventDTO) {
         Call<ResponseBody> call = eventService.createEvent(eventDTO);
         call.enqueue(new Callback<ResponseBody>() {
@@ -84,7 +83,7 @@ public class EventController {
         });
     }
 
-    public void updateEvent(EventDTO eventDTO){
+    public void updateEvent(EventDTO eventDTO) {
         Call<ResponseBody> call = eventService.updateEvent(eventDTO);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -106,7 +105,7 @@ public class EventController {
         });
     }
 
-    public void inviteEvent(MemberInvitationDTO memberInvitationDTO){
+    public void inviteEvent(MemberInvitationDTO memberInvitationDTO) {
         Call<ResponseBody> call = eventService.inviteEvent(memberInvitationDTO);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -128,7 +127,7 @@ public class EventController {
         });
     }
 
-    public void findEventByDate(String date, EventoneCallback callback){
+    public void findEventByDate(String date, EventoneCallback callback) {
         Call<EventDTO> call = eventService.findEvent(date);
         call.enqueue(new Callback<EventDTO>() {
             @Override
@@ -153,7 +152,7 @@ public class EventController {
         });
     }
 
-    public void fineEventByName(String name, EventListCallBack callback){
+    public void fineEventByName(String name, EventListCallBack callback) {
         Call<List<EventDTO>> call = eventService.findByName(name);
         call.enqueue(new Callback<List<EventDTO>>() {
             @Override
@@ -178,7 +177,7 @@ public class EventController {
         });
     }
 
-    public void eventList(EventListCallBack callback){
+    public void eventList(EventListCallBack callback) {
         Call<List<EventDTO>> call = eventService.eventList();
         call.enqueue(new Callback<List<EventDTO>>() {
             @Override
@@ -200,7 +199,7 @@ public class EventController {
         });
     }
 
-    public void memberList(String date, MemberCallback callback){
+    public void memberList(String date, MemberCallback callback) {
         Call<List<MemberDTO>> call = eventService.memberList(date);
         call.enqueue(new Callback<List<MemberDTO>>() {
             @Override
@@ -221,6 +220,4 @@ public class EventController {
             }
         });
     }
-
-
 }

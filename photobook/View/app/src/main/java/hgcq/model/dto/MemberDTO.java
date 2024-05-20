@@ -11,6 +11,11 @@ public class MemberDTO implements Serializable {
     public MemberDTO() {
     }
 
+    public MemberDTO(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public MemberDTO(String name, String email, String password) {
         this.name = name;
         this.email = email;
@@ -29,13 +34,23 @@ public class MemberDTO implements Serializable {
         return password;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "MemberDTO{" +
                 "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+                ", email='" + email + '\'';
     }
 }
 
