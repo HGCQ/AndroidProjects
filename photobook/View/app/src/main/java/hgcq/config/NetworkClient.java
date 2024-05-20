@@ -1,17 +1,24 @@
 package hgcq.config;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import hgcq.model.service.EventService;
 import hgcq.model.service.MemberService;
 import hgcq.model.service.PhotoService;
+import okhttp3.Cookie;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -20,19 +27,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkClient {
     private static NetworkClient instance;
 
+    private final OkHttpClient okHttpClient;
+    private final ClearableCookieJar cookieJar;
+    private final Context app;
+    private final SharedPrefsCookiePersistor sharedPrefsCookiePersistor;
 
-    private static OkHttpClient okHttpClient;
-    private static ClearableCookieJar cookieJar;
+    private final PhotoService photoService;
+    private final MemberService memberService;
+    private final EventService eventService;
 
-    private static PhotoService photoService;
-    private static MemberService memberService;
-    private static EventService eventService;
-
-    private static final String serverIp = "http://192.168.35.193:8080";
+    private final String serverIp = "서버 주소";
 
     private NetworkClient(Context context) {
+        app = context.getApplicationContext();
+
+        // 쿠키 설정
+        sharedPrefsCookiePersistor = new SharedPrefsCookiePersistor(app);
+
         cookieJar = new PersistentCookieJar(new SetCookieCache()
-                , new SharedPrefsCookiePersistor(context));
+                , sharedPrefsCookiePersistor);
 
         // Http 메시지 로그
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor()
@@ -66,12 +79,12 @@ public class NetworkClient {
         return instance;
     }
 
-    public OkHttpClient getOkHttpClient() {
-        return okHttpClient;
-    }
-
     public ClearableCookieJar getCookieJar() {
         return cookieJar;
+    }
+
+    public Context getApp() {
+        return app;
     }
 
     public String getServerIp() {
@@ -88,5 +101,35 @@ public class NetworkClient {
 
     public EventService getEventService() {
         return eventService;
+    }
+
+    public SharedPrefsCookiePersistor getSharedPrefsCookiePersistor() {
+        return sharedPrefsCookiePersistor;
+    }
+
+    public void saveCookie() {
+        NetworkClient client = NetworkClient.getInstance(app);
+
+        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+        sharedPrefsCookiePersistor.saveAll(cookies);
+
+        for (Cookie ck : cookies) {
+            Log.d("받아온 쿠키", "Name: " + ck.name() + " Value: " + ck.value());
+        }
+
+        List<Cookie> cookies1 = sharedPrefsCookiePersistor.loadAll();
+
+        for (Cookie ck : cookies1) {
+            Log.d("쿠키 저장", "Name: " + ck.name() + " Value: " + ck.value());
+        }
+    }
+
+    public void deleteCookie() {
+        NetworkClient client = NetworkClient.getInstance(app);
+
+        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+        sharedPrefsCookiePersistor.removeAll(cookies);
+
+        Log.d("쿠키 삭제", "성공");
     }
 }

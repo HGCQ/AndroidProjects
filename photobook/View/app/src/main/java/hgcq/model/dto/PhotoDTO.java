@@ -26,4 +26,11 @@ public class PhotoDTO implements Serializable {
         return date;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
