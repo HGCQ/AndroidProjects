@@ -24,6 +24,12 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * 서버와 통신 설정
+ * 쿠키 저장 - saveCookie()
+ * 쿠키 삭제 - deleteCookie()
+ * 로그인 여부 확인 - isLogin()
+ */
 public class NetworkClient {
     private static NetworkClient instance;
 
@@ -55,9 +61,9 @@ public class NetworkClient {
         okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .addInterceptor(logging)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
 
         // 서버와 연결
@@ -122,6 +128,18 @@ public class NetworkClient {
         for (Cookie ck : cookies1) {
             Log.d("쿠키 저장", "Name: " + ck.name() + " Value: " + ck.value());
         }
+    }
+
+    public boolean isLogin() {
+        NetworkClient client = NetworkClient.getInstance(app);
+
+        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+        
+        for(Cookie cookie : cookies) {
+            Log.d("로그인 쿠키", cookie.name());
+        }
+
+        return !cookies.isEmpty();
     }
 
     public void deleteCookie() {

@@ -4,13 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.List;
 
-import hgcq.callback.PhotoCallback;
 import hgcq.config.NetworkClient;
 import hgcq.model.dto.PhotoDTO;
 import hgcq.model.service.PhotoService;
@@ -20,8 +17,13 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
+/**
+ * 서버와 통신 API (사진 관련)
+ * 사진 업로드 - uploadPhoto(Uri photoUri, String photoName, String eventDate, Callback<ResponseBody> callback) // 현재 갤러리에서 사진 하나만 선택이 가능
+ * 사진 삭제 - deletePhoto(String photoName, String eventDate, Callback<ResponseBody> callback) // 현재 갤러리에서 사진 하나만 선택이 가능
+ * 사진 리스트 조회 - getPhotos(String eventDate, Callback<List<String>> callback)
+ */
 public class PhotoController {
 
     private PhotoService photoService;
@@ -33,100 +35,53 @@ public class PhotoController {
         this.context = context;
     }
 
-
     /**
      * 사진 업로드
      *
-     * @param imageUri  사진 경로
-     * @param date      이벤트 날짜
-     * @param imageName 사진 이름
+     * @param photoUri  사진 URI
+     * @param photoName 사진 이름
+     * @param eventDate 이벤트 날짜
+     * @param callback  콜백
      */
-    public void uploadPhoto(Uri imageUri, String date, String imageName) {
-        String filePath = getRealPathFromURI(imageUri);
+    public void uploadPhoto(Uri photoUri, String photoName, String eventDate, Callback<ResponseBody> callback) {
+        String filePath = getRealPathFromURI(photoUri);
         File file = new File(filePath);
 
         RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), reqFile);
 
-        RequestBody datePart = RequestBody.create(MultipartBody.FORM, date);
-        RequestBody namePart = RequestBody.create(MultipartBody.FORM, imageName);
+        RequestBody datePart = RequestBody.create(MultipartBody.FORM, eventDate);
+        RequestBody namePart = RequestBody.create(MultipartBody.FORM, photoName);
 
         Call<ResponseBody> call = photoService.uploadPhoto(datePart, namePart, body);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "사진 업로드 성공", Toast.LENGTH_SHORT).show();
-                    Log.d("사진 업로드 성공", "상태 코드: " + response.code());
-                } else {
-                    Toast.makeText(context, "사진 삭제 실패", Toast.LENGTH_SHORT).show();
-                    Log.e("사진 업로드 에러:", "상태 코드: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, "사진 업로드 실패", Toast.LENGTH_SHORT).show();
-                Log.e("사진 업로드 에러:", t.getMessage());
-            }
-        });
+        call.enqueue(callback);
     }
+
 
     /**
      * 사진 삭제
      *
-     * @param imageName 사진 이름
-     * @param date      날짜
+     * @param photoName 사진 이름
+     * @param eventDate 이벤트 날짜
+     * @param callback  콜백
      */
-    public void deletePhoto(String imageName, String date) {
-        PhotoDTO photoDTO = new PhotoDTO(imageName, date);
+    public void deletePhoto(String photoName, String eventDate, Callback<ResponseBody> callback) {
+        PhotoDTO photoDTO = new PhotoDTO(photoName, eventDate);
 
         Call<ResponseBody> call = photoService.deletePhoto(photoDTO);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "사진 삭제 성공", Toast.LENGTH_SHORT).show();
-                    Log.d("사진 삭제 성공", "상태 코드: " + response.code());
-                } else {
-                    Toast.makeText(context, "사진 삭제 실패", Toast.LENGTH_SHORT).show();
-                    Log.e("사진 업로드 에러:", "상태 코드: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, "사진 삭제 실패", Toast.LENGTH_SHORT).show();
-                Log.e("사진 업로드 에러:", t.getMessage());
-            }
-        });
+        call.enqueue(callback);
     }
+
 
     /**
      * 사진 리스트 조회
      *
-     * @param eventDate 날짜
-     * @param callback  콜백 인터페이스
+     * @param eventDate 이벤트 날짜
+     * @param callback  콜백
      */
-    public void getPhotos(String eventDate, PhotoCallback callback) {
+    public void getPhotos(String eventDate, Callback<List<String>> callback) {
         Call<List<String>> call = photoService.getPhotos(eventDate);
-        call.enqueue(new Callback<List<String>>() {
-            @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                if (response.isSuccessful()) {
-                    Log.d("사진 리스트 조회 성공", "상태 코드: " + response.code());
-                    callback.onSuccess(response.body());
-                } else {
-                    callback.onError("사진 리스트 조회 실패 : " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
-                Log.e("사진 업로드 에러:", t.getMessage());
-                callback.onError(t.getMessage());
-            }
-        });
+        call.enqueue(callback);
     }
 
     // -- 유틸리티 메소드 --
