@@ -9,96 +9,116 @@
     tools:context=".activity.Event">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/content"
         android:layout_width="280dp"
         android:layout_height="150dp"
         android:layout_marginBottom="32dp"
-        android:hint="내용을 입력하세요"
+        android:hint="내용을 입력하세요."
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/imageButton4"
+        app:layout_constraintBottom_toTopOf="@id/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.309"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton4"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="24dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/saveicon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="56dp"
-        app:layout_constraintBottom_toTopOf="@id/editText"
+        app:layout_constraintBottom_toTopOf="@id/content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/post" />
 
     <ImageButton
-        android:id="@+id/imageButton5"
+        android:id="@+id/addPhoto"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="52dp"
-        android:layout_marginBottom="272dp"
+        android:layout_marginBottom="260dp"
         android:scaleType="fitCenter"
         android:src="@drawable/photolibraryicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
     <ImageButton
-        android:id="@+id/imageButton6"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="340dp"
-        android:layout_marginBottom="664dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/backicon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageButton
-        android:id="@+id/imageButton7"
+        android:id="@+id/save"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="664dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/saveicon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="340dp"
+        android:layout_marginBottom="688dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/backicon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.003"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/settingList"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="118dp"
+        tools:layout_editor_absoluteY="151dp" />
+
+    <ImageButton
+        android:id="@+id/setting"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="4dp"
         android:scaleType="fitCenter"
         android:src="@drawable/menuicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.003" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="264dp"
-        android:text="TextView"
+        android:layout_marginEnd="152dp"
+        android:text="2000-00-00"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.602" />
+        app:layout_constraintVertical_bias="0.103" />
 
     <EditText
-        android:id="@+id/editTextDate2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="136dp"
+        android:id="@+id/title"
+        android:layout_width="190dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="160dp"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.092" />
+        app:layout_constraintVertical_bias="0.619" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="167dp"
+        android:layout_height="221dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="124dp"
+        tools:layout_editor_absoluteY="160dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

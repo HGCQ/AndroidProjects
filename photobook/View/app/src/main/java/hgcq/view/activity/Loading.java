@@ -19,7 +19,7 @@ public class Loading extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        imageView2 = findViewById(R.id.imageView2);
+        imageView2 = findViewById(R.id.loading);
         Glide.with(this)
                 .asGif()
                 .load(R.drawable.loading)
@@ -31,7 +31,7 @@ public class Loading extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy(){
         super.onDestroy();
         if (mediaPlayer != null) {
             mediaPlayer.release();
