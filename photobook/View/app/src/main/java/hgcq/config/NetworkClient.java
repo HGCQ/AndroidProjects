@@ -61,9 +61,9 @@ public class NetworkClient {
         okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .addInterceptor(logging)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
 
         // 서버와 연결
@@ -134,6 +134,10 @@ public class NetworkClient {
         NetworkClient client = NetworkClient.getInstance(app);
 
         List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+        
+        for(Cookie cookie : cookies) {
+            Log.d("로그인 쿠키", cookie.name());
+        }
 
         return !cookies.isEmpty();
     }
