@@ -13,6 +13,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import hgcq.callback.FriendCallBack;
 import hgcq.callback.LoginCallback;
 import hgcq.callback.MemberCallback;
 import hgcq.config.NetworkClient;
@@ -28,6 +29,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * 서버와 통신 API (회원 관련)
+ * 회원 가입 - createMember(MemberDTO memberDto)
+ * 로그인 - loginMember(MemberDTO memberDto, LoginCallback callback)
+ * 로그아웃 - logoutMember()
+ * 회원 정보 수정 - updateMember(MemberDTO memberDto)
+ * 친구 추가 - addFriend(MemberDTO memberDto, FriendCallBack callBack)
+ * 친구 삭제 - deleteFriend(MemberDTO memberDto, FriendCallBack callBack)
+ * 친구 리스트 조회 - friendList(MemberCallback callback)
+ */
 public class MemberController {
 
     private NetworkClient client;
@@ -135,7 +146,7 @@ public class MemberController {
         });
     }
 
-    public void addFriend(MemberDTO memberDto) {
+    public void addFriend(MemberDTO memberDto, FriendCallBack callBack) {
         //
         Call<ResponseBody> call = memberService.addFriend(memberDto);
         call.enqueue(new Callback<ResponseBody>() {
@@ -144,9 +155,11 @@ public class MemberController {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "친구 추가 성공!", Toast.LENGTH_SHORT).show();
                     Log.d("친구 추가 성공!", "성공" + response.code());
+                    callBack.onSuccess();
                 } else {
                     Toast.makeText(context, "친구 추가 실패!", Toast.LENGTH_SHORT).show();
                     Log.e("친구 추가 실패!", "에러:" + response.code());
+                    callBack.onError(String.valueOf(response.code()));
                 }
             }
 
@@ -154,11 +167,12 @@ public class MemberController {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(context, "친구 추가:서버에서 응답받지 못했어용 ㅠㅠ", Toast.LENGTH_SHORT).show();
                 Log.e("친구 추가:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
+                callBack.onError(t.getMessage());
             }
         });
     }
 
-    public void deleteFriend(MemberDTO memberDto) {
+    public void deleteFriend(MemberDTO memberDto, FriendCallBack callBack) {
         Call<ResponseBody> call = memberService.deleteFriend(memberDto);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -166,9 +180,11 @@ public class MemberController {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "친구 삭제 성공!", Toast.LENGTH_SHORT).show();
                     Log.d("친구 삭제 성공!", "성공" + response.code());
+                    callBack.onSuccess();
                 } else {
                     Toast.makeText(context, "친구 삭제 실패!", Toast.LENGTH_SHORT).show();
                     Log.e("친구 삭제 실패!", "에러:" + response.code());
+                    callBack.onError(String.valueOf(response.code()));
                 }
             }
 
@@ -176,6 +192,7 @@ public class MemberController {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(context, "친구 삭제:서버에서 응답받지 못했어용 ㅠㅠ", Toast.LENGTH_SHORT).show();
                 Log.e("친구 삭제:서버에서 응답받지 못했어용 ㅠㅠ", t.getMessage());
+                callBack.onError(t.getMessage());
             }
         });
     }

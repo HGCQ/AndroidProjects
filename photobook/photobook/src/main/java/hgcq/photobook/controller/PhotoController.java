@@ -11,6 +11,8 @@ import hgcq.photobook.service.PhotoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,20 +28,19 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/photo")
 public class PhotoController {
+
+    private static final Logger log = LoggerFactory.getLogger(PhotoController.class);
 
     private final PhotoService photoService;
     private final EventService eventService;
     private final MemberService memberService;
 
-    private String directoryPath = "src" + File.separator
-            + "main" + File.separator
-            + "resources" + File.separator
-            + "static" + File.separator
+    private String directoryPath = "D:" + File.separator
+            + "app" + File.separator
             + "images" + File.separator;
 
-    @PostMapping("/upload")
+    @PostMapping("/photo/upload")
     public ResponseEntity<?> uploadPhoto(@ModelAttribute PhotoDTO photoDTO
             , HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -67,7 +68,9 @@ public class PhotoController {
 
                             image.transferTo(path);
 
-                            Photo photo = new Photo(imageName, path.toString(), findEvent);
+                            String imagePath = "/images/" + findEvent.getId() + "/" + imageName;
+
+                            Photo photo = new Photo(imageName, imagePath, findEvent);
                             photoService.uploadPhoto(photo, member);
 
                             return ResponseEntity.ok("사진 업로드 성공");
@@ -75,14 +78,13 @@ public class PhotoController {
                             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사진 업로드 중 에러 발생");
                         }
                     }
-
                 }
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사진 업로드 실패");
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/photo/delete")
     public ResponseEntity<?> deletePhoto(@RequestBody PhotoDTO photoDTO, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
@@ -117,7 +119,7 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사진 삭제 실패");
     }
 
-    @GetMapping("/photos")
+    @GetMapping("/photo/photos")
     public ResponseEntity<?> getPhotos(@RequestParam("date") String date, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
@@ -139,4 +141,5 @@ public class PhotoController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사진 리스트 조회 실패");
     }
+
 }
