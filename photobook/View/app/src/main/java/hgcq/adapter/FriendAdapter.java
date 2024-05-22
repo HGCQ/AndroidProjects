@@ -1,5 +1,6 @@
 package hgcq.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,14 @@ import hgcq.view.R;
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
 
+    private Context context;
     private List<MemberDTO> friendList;
     private OnFriendClickListener listener;
-    private MemberController mc;
+
+    public FriendAdapter(Context context, List<MemberDTO> friendList) {
+        this.context = context;
+        this.friendList = friendList;
+    }
 
     public interface OnFriendClickListener {
         void onButtonClick(String name, String email);
