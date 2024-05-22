@@ -21,8 +21,6 @@ public class Event extends AppCompatActivity {
 
     private ImageView imageView3;
     private EditText editText;
-    private Button button;
-    private Button button2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,24 +29,6 @@ public class Event extends AppCompatActivity {
 
         imageView3 = (ImageView) findViewById(R.id.imageView3);
         editText = (EditText) findViewById(R.id.editText);
-        button = (Button) findViewById(R.id.button);
-        button2 = (Button) findViewById(R.id.button2);
-
-        // 완료
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String content = editText.getText().toString();
-            }
-        });
-
-        // 사진 추가
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
     }
 
