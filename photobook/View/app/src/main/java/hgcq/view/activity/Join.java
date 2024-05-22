@@ -16,7 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.regex.Pattern;
 
+import hgcq.controller.MemberController;
+import hgcq.model.dto.MemberDTO;
 import hgcq.view.R;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Join extends AppCompatActivity {
 
@@ -26,10 +32,14 @@ public class Join extends AppCompatActivity {
 
     private Context context;
 
+    private MemberController mc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+
+        mc = new MemberController(this);
 
         String regName = "^[가-힣A-Za-z0-9]{1,8}$";
         String regPw = "^[A-Za-z][A-Za-z0-9!@#$%^&*()_+]{7,19}$";
@@ -95,9 +105,25 @@ public class Join extends AppCompatActivity {
                 // 비밀번호 일치 확인
                 if (userPw.equals(userPwCheck)) {
                     // 회원 가입
+                    mc.createMember(new MemberDTO(userName, userEmail, userPw), new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(context, "회원 가입 성공!", Toast.LENGTH_SHORT).show();
+                                Log.d("회원 가입 성공", "Code: " + response.code());
+                                startActivity(loginPage);
+                            } else {
+                                Toast.makeText(context, "이미 존재하지 않는 이메일입니다.", Toast.LENGTH_SHORT).show();
+                                Log.d("회원 가입 실패", "Code: " + response.code());
+                            }
+                        }
 
-                    Toast.makeText(context, "회원가입 성공!!", Toast.LENGTH_SHORT).show();
-                    startActivity(loginPage);
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(context, "서버 응답 오류", Toast.LENGTH_SHORT).show();
+                            Log.e("회원 가입 실패", t.getMessage());
+                        }
+                    });
                 } else {
                     Toast.makeText(context, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
