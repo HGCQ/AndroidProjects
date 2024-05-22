@@ -1,11 +1,12 @@
 package hgcq.photobook.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 
-@Getter
+@Getter @Setter
 public class PhotoDTO implements Serializable {
 
     private String date;
@@ -23,6 +24,12 @@ public class PhotoDTO implements Serializable {
 
     public PhotoDTO(String date, MultipartFile image) {
         this.date = date;
+        this.image = image;
+    }
+
+    public PhotoDTO(String date, String imageName, MultipartFile image) {
+        this.date = date;
+        this.imageName = imageName;
         this.image = image;
     }
 

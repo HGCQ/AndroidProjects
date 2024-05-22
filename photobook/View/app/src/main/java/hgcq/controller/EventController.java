@@ -4,29 +4,33 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import hgcq.callback.EventListCallBack;
-import hgcq.callback.EventoneCallback;
+import hgcq.callback.EventOneCallback;
 import hgcq.callback.MemberCallback;
 import hgcq.config.NetworkClient;
 import hgcq.model.dto.EventDTO;
 import hgcq.model.dto.MemberDTO;
 import hgcq.model.dto.MemberInvitationDTO;
 import hgcq.model.service.EventService;
-import okhttp3.JavaNetCookieJar;
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * 서버와 통신 API (이벤트 관련)
+ * 이벤트 생성 - createEvent(EventDTO eventDTO)
+ * 이벤트 삭제 - deleteEvent(EventDTO eventDTO)
+ * 이벤트 수정 - updateEvent(EventDTO eventDTO)
+ * 친구 초대 - inviteEvent(MemberInvitationDTO memberInvitationDTO)
+ * 이벤트 조회(날짜) - findEventByDate(String date, EventOneCallback callback)
+ * 이벤트 조회(이름) - fineEventByName(String name, EventListCallBack callback)
+ * 이벤트 조회(친구) - // 제작중
+ * 이벤트 리스트 조회 - eventList(EventListCallBack callback)
+ * 이벤트 회원 리스트 조회 - memberList(String date, MemberCallback callback)
+ */
 public class EventController {
 
     private EventService eventService;
@@ -127,7 +131,7 @@ public class EventController {
         });
     }
 
-    public void findEventByDate(String date, EventoneCallback callback) {
+    public void findEventByDate(String date, EventOneCallback callback) {
         Call<EventDTO> call = eventService.findEvent(date);
         call.enqueue(new Callback<EventDTO>() {
             @Override

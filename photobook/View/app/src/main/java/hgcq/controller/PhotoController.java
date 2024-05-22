@@ -22,6 +22,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * 서버와 통신 API (사진 관련)
+ * 사진 업로드 - uploadPhoto(Uri imageUri, String date, String imageName) // 현재 갤러리에서 사진 하나만 선택이 가능
+ * 사진 삭제 - deletePhoto(String imageName, String date) // 현재 갤러리에서 사진 하나만 선택이 가능
+ * 사진 리스트 조회 - getPhotos(String eventDate, PhotoCallback callback)
+ */
 public class PhotoController {
 
     private PhotoService photoService;
@@ -59,7 +65,7 @@ public class PhotoController {
                     Toast.makeText(context, "사진 업로드 성공", Toast.LENGTH_SHORT).show();
                     Log.d("사진 업로드 성공", "상태 코드: " + response.code());
                 } else {
-                    Toast.makeText(context, "사진 삭제 실패", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "사진 업로드 실패", Toast.LENGTH_SHORT).show();
                     Log.e("사진 업로드 에러:", "상태 코드: " + response.code());
                 }
             }
@@ -90,14 +96,14 @@ public class PhotoController {
                     Log.d("사진 삭제 성공", "상태 코드: " + response.code());
                 } else {
                     Toast.makeText(context, "사진 삭제 실패", Toast.LENGTH_SHORT).show();
-                    Log.e("사진 업로드 에러:", "상태 코드: " + response.code());
+                    Log.e("사진 삭제 에러:", "상태 코드: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(context, "사진 삭제 실패", Toast.LENGTH_SHORT).show();
-                Log.e("사진 업로드 에러:", t.getMessage());
+                Log.e("사진 삭제 에러:", t.getMessage());
             }
         });
     }
@@ -123,7 +129,7 @@ public class PhotoController {
 
             @Override
             public void onFailure(Call<List<String>> call, Throwable t) {
-                Log.e("사진 업로드 에러:", t.getMessage());
+                Log.e("사진 리스트 조회 에러:", t.getMessage());
                 callback.onError(t.getMessage());
             }
         });
