@@ -1,5 +1,6 @@
 package hgcq.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,13 @@ import hgcq.model.dto.EventDTO;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
 
+    private Context context;
     private List<EventDTO> eventList;
+
+    public EventAdapter(Context context, List<EventDTO> eventList) {
+        this.context = context;
+        this.eventList = eventList;
+    }
 
     public static class EventHolder extends RecyclerView.ViewHolder {
         public TextView name;
