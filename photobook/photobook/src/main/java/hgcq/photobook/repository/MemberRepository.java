@@ -8,6 +8,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 회원 가입
+ * 회원 조회
+ * 이메일 리스트 조회
+ */
+
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
@@ -15,20 +21,41 @@ public class MemberRepository {
     @PersistenceContext
     private final EntityManager em;
 
+    /**
+     * 회원 저장
+     *
+     * @param member 저장할 회원
+     * @return 회원 아이디
+     */
     public Long save(Member member) {
-        em.persist(member);
+        if (member.getId() == null) {
+            em.persist(member);
+        } else {
+            em.merge(member);
+        }
         return member.getId();
     }
 
-    public Member findOne(long id) {
-        return em.find(Member.class, id);
+
+    /**
+     * 회원 검색
+     *
+     * @param email 회원 이메일
+     * @return 회원
+     */
+    public Member findOne(String email) {
+        return em.createQuery("select m from Member m where email = :email", Member.class)
+                .setParameter("email", email)
+                .getSingleResult();
     }
 
-    public List<Member> findAll() {
-        return em.createQuery("select m from Member m", Member.class).getResultList();
-    }
-
+    /**
+     * 회원 이메일 리스트 검색
+     *
+     * @return 회원 이메일 리스트
+     */
     public List<String> findEmail() {
-        return em.createQuery("select m.email from Member m", String.class).getResultList();
+        return em.createQuery("select m.email from Member m", String.class)
+                .getResultList();
     }
 }

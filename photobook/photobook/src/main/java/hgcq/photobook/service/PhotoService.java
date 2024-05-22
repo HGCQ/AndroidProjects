@@ -1,51 +1,164 @@
 package hgcq.photobook.service;
 
+import hgcq.photobook.domain.Event;
+import hgcq.photobook.domain.Member;
 import hgcq.photobook.domain.Photo;
 import hgcq.photobook.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 사진 업로드
+ * 사진 삭제
+ * 사진 검색
+ * 사진 리스트 검색
+ */
+
 @Service
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PhotoService {
 
+    private static final Logger log = LoggerFactory.getLogger(PhotoService.class);
+
     private final PhotoRepository photoRepository;
+    private final EventService eventService;
+    private final MemberService memberService;
 
     /**
      * 사진 업로드
-     * @param photo 업로드할 사진
-     * @return photo_id
+     *
+     * @param photo  사진
+     * @param member 회원
      */
     @Transactional
-    public Long uploadPhoto(Photo photo) {
-        if(photo.getImage() != null && photo.getImageName() == null) {
-            photoRepository.save(photo);
-        } else {
-            throw new IllegalStateException("잘못된 접근입니다.");
+    public void uploadPhoto(Photo photo, Member member) {
+        if (photo.getImageName() == null || photo.getPath() == null) {
+            log.error("사진 업로드 실패");
+            throw new IllegalArgumentException("잘못된 파일입니다.");
         }
-        return photo.getId();
+
+        if (member == null) {
+            log.error("사진 업로드 실패");
+            throw new IllegalArgumentException("잘못된 파일입니다.");
+        }
+
+        Member findMember = memberService.findOne(member.getEmail());
+
+        if (findMember == null) {
+            log.error("사진 업로드 실패");
+            throw new IllegalArgumentException("회원이 없습니다.");
+        }
+
+        Event findEvent = eventService.searchEventByDate(photo.getEvent().getDate(), findMember);
+
+        if (findEvent == null) {
+            log.error("사진 업로드 실패");
+            throw new IllegalArgumentException("이벤트가 없습니다.");
+        }
+
+        photoRepository.save(photo);
+        log.debug("사진 업로드 성공");
     }
 
     /**
      * 사진 삭제
-     * @param id photo_id
-     * @return photo_id
+     *
+     * @param imageName 사진 이름
+     * @param event     이벤트
+     * @param member    회원
      */
-    public Long deletePhoto(Long id) {
-        photoRepository.delete(id);
-        return id;
+    @Transactional
+    public boolean deletePhoto(String imageName, Event event, Member member) {
+        if (imageName == null || event == null || member == null) {
+            log.error("사진 삭제 실패");
+            return false;
+        }
+
+        Photo findPhoto = findPhoto(imageName, event, member);
+
+        if (findPhoto == null) {
+            log.error("사진 삭제 실패");
+            return false;
+        }
+
+        photoRepository.delete(findPhoto);
+        log.debug("사진 삭제 성공");
+        return true;
     }
 
     /**
-     * 이벤트 사진 리스트
-     * @param eventId event_id
-     * @return 이벤트마다 사진 리스트
+     * 사진 검색
+     *
+     * @param imageName 이미지 이름
+     * @param event     이벤트
+     * @param member    회원
+     * @return 사진
      */
-    public List<Photo> photoList(Long eventId) {
-        return photoRepository.findAll(eventId);
+    public Photo findPhoto(String imageName, Event event, Member member) {
+        if (imageName == null || event == null || member == null) {
+            log.error("사진 조회 실패");
+            throw new IllegalArgumentException("잘못된 파일입니다.");
+        }
+
+        Member findMember = memberService.findOne(member.getEmail());
+
+        if (findMember == null) {
+            log.error("사진 조회 실패");
+            throw new IllegalArgumentException("회원이 없습니다.");
+        }
+
+        Event findEvent = eventService.searchEventByDate(event.getDate(), findMember);
+
+        if (findEvent == null) {
+            log.error("사진 조회 실패");
+            throw new IllegalArgumentException("이벤트가 없습니다.");
+        }
+
+        List<String> imageNames = photoRepository.findImageNames(findEvent);
+
+        if (!imageNames.contains(imageName)) {
+            log.error("사진 조회 실패");
+            throw new IllegalArgumentException("사진이 없습니다.");
+        }
+
+        log.debug("사진 조회 성공");
+        return photoRepository.findOne(imageName, findEvent);
+    }
+
+    /**
+     * 사진 리스트 검색
+     *
+     * @param event  이벤트
+     * @param member 회원
+     * @return 사진 경로 리스트
+     */
+    public List<String> photoList(Event event, Member member) {
+        if (event == null || member == null) {
+            log.error("사진 리스트 실패");
+            throw new IllegalArgumentException("잘못된 파일입니다.");
+        }
+
+        Member findMember = memberService.findOne(member.getEmail());
+
+        if (findMember == null) {
+            log.error("사진 리스트 조회 실패");
+            throw new IllegalArgumentException("회원이 없습니다.");
+        }
+
+        Event findEvent = eventService.searchEventByDate(event.getDate(), findMember);
+
+        if (findEvent == null) {
+            log.error("사진 리스트 조회 실패");
+            throw new IllegalArgumentException("이벤트가 없습니다.");
+        }
+
+        log.debug("사진 리스트 조회 성공");
+        return photoRepository.findAll(findEvent);
     }
 }

@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Event {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "event_id")
     private Long id;
 
@@ -22,14 +23,34 @@ public class Event {
 
     private LocalDate date;
 
-    @OneToMany(mappedBy="event")
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "event")
     private List<Photo> photos;
 
-    @OneToMany(mappedBy="event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<EventMember> eventMembers;
 
     public Event(String name, LocalDate date) {
         this.name = name;
         this.date = date;
+    }
+
+    public Event(String name, LocalDate date, Member member) {
+        this.name = name;
+        this.date = date;
+        this.member = member;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

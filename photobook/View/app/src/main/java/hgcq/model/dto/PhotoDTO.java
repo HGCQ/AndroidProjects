@@ -1,4 +1,36 @@
 package hgcq.model.dto;
 
-public class PhotoDTO {
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class PhotoDTO implements Serializable {
+
+    private String imageName;
+
+    private String date;
+
+    public PhotoDTO() {
+    }
+
+    public PhotoDTO(String imageName, String date) {
+        this.imageName = imageName;
+        this.date = date;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
