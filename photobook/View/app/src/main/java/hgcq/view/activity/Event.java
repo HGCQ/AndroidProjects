@@ -24,13 +24,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import hgcq.config.NetworkClient;
-import hgcq.controller.EventController;
-import hgcq.controller.MemberController;
 import hgcq.controller.PhotoController;
 import hgcq.view.R;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Event extends AppCompatActivity {
+
+    // Controller
+    private PhotoController pc;
 
     // View
     private ImageButton back, setting, addPhoto, save;
@@ -42,6 +52,7 @@ public class Event extends AppCompatActivity {
     // Config
     private boolean isRecyclerViewVisible = false;
     private Context context;
+    private NetworkClient client;
 
     // Status Code
     private static final int REQUEST_GALLERY = 1000; // 갤러리
@@ -52,7 +63,10 @@ public class Event extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
+        client = NetworkClient.getInstance(this);
         this.context = this;
+
+        pc = new PhotoController(this);
 
         back = (ImageButton) findViewById(R.id.back);
         setting = (ImageButton) findViewById(R.id.setting);
@@ -68,11 +82,12 @@ public class Event extends AppCompatActivity {
 
         settingList.setLayoutManager(new LinearLayoutManager(context));
 
-        Intent main = new Intent(this, Main.class);
+        Intent mainPage = new Intent(this, Main.class);
+        Intent galleryPage = new Intent(this, Gallery.class);
 
         Intent get = getIntent();
         String resDate = get.getStringExtra("date");
-        String resTitle = get.getStringExtra("name");
+        String resTitle = get.getStringExtra("title");
         String resContent = get.getStringExtra("content");
 
         runOnUiThread(new Runnable() {
@@ -85,13 +100,35 @@ public class Event extends AppCompatActivity {
                 } else {
                     content.setText(resContent);
                 }
+                pc.getPhotos(resDate, new Callback<List<String>>() {
+                    @Override
+                    public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                        if (response.isSuccessful()) {
+                            List<String> photoUrlList = response.body();
+                            if (!photoUrlList.isEmpty()) {
+                                int random = (int) (Math.random() * photoUrlList.size());
+                                String url = photoUrlList.get(random);
+                                String serverIp = client.getServerIp();
+
+                                Glide.with(context)
+                                        .load(serverIp + url)
+                                        .into(photo);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<String>> call, Throwable t) {
+                        Log.e("서버 응답 실패", t.getMessage());
+                    }
+                });
             }
         });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(main);
+                startActivity(mainPage);
             }
         });
 
@@ -132,6 +169,16 @@ public class Event extends AppCompatActivity {
             }
         });
 
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                galleryPage.putExtra("date", resDate);
+                galleryPage.putExtra("title", resTitle);
+                galleryPage.putExtra("content", resContent);
+                startActivity(galleryPage);
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,9 +198,31 @@ public class Event extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        date = (TextView) findViewById(R.id.date);
         if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri photoUrl = data.getData();
             // 사진 업로드
+            pc.uploadPhoto(photoUrl, getImageName(photoUrl), date.getText().toString(), new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(context, "사진 업로드 성공!", Toast.LENGTH_SHORT).show();
+                        Log.d("사진 업로드 성공", "Code: " + response.code());
+                        Glide.with(context)
+                                .load(photoUrl)
+                                .into(photo);
+                    } else {
+                        Toast.makeText(context, "사진 업로드 실패", Toast.LENGTH_SHORT).show();
+                        Log.d("사진 업로드 실패", "Code: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(context, "서버 응답 실패", Toast.LENGTH_SHORT).show();
+                    Log.e("서버 응답 실패", t.getMessage());
+                }
+            });
         }
     }
 

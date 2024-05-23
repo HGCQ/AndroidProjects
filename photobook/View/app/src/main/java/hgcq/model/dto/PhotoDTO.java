@@ -9,6 +9,8 @@ public class PhotoDTO implements Serializable {
 
     private String date;
 
+    private String path;
+
     public PhotoDTO() {
     }
 
@@ -32,5 +34,13 @@ public class PhotoDTO implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
