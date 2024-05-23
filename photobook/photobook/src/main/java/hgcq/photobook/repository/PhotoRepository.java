@@ -42,6 +42,18 @@ public class PhotoRepository {
     }
 
     /**
+     * 사진 경로로 검색
+     *
+     * @param path 경로
+     * @return 사진
+     */
+    public Photo findByPath(String path) {
+        return em.createQuery("select p from Photo p where p.path = :path", Photo.class)
+                .setParameter("path", path)
+                .getSingleResult();
+    }
+
+    /**
      * 사진 하나 검색
      *
      * @param imageName 사진 이름

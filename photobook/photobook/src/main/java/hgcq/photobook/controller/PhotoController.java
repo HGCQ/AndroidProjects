@@ -95,22 +95,18 @@ public class PhotoController {
                 Member member = memberService.findOne(loginMember.getEmail());
 
                 if (member != null) {
-                    Event findEvent = eventService.searchEventByDate(LocalDate.parse(photoDTO.getDate()), member);
+                    boolean isDelete = photoService.deletePhoto(photoDTO.getPath(), member);
 
-                    if (findEvent != null) {
-                        boolean isDelete = photoService.deletePhoto(photoDTO.getImageName(), findEvent, member);
+                    if (isDelete) {
+                        try {
+                            String newPath = "D:" + File.separator
+                                    + "app" + File.separator + photoDTO.getPath();
 
-                        if (isDelete) {
-                            try {
-                                String newPath = directoryPath + findEvent.getId() + File.separator;
-                                Path path = Paths.get(newPath + photoDTO.getImage());
+                            Files.deleteIfExists(Path.of(newPath));
 
-                                Files.deleteIfExists(path);
-
-                                return ResponseEntity.ok("사진 삭제 성공");
-                            } catch (Exception e) {
-                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사진 삭제 중 에러 발생");
-                            }
+                            return ResponseEntity.ok("사진 삭제 성공");
+                        } catch (Exception e) {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사진 삭제 중 에러 발생");
                         }
                     }
                 }

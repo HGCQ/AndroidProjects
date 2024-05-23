@@ -11,6 +11,7 @@ public class PhotoDTO implements Serializable {
 
     private String date;
     private String imageName;
+    private String path;
 
     private MultipartFile image;
 
