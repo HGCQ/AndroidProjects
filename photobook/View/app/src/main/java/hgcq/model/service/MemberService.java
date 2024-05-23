@@ -1,15 +1,12 @@
 package hgcq.model.service;
 
-
 import java.util.List;
-
 import hgcq.model.dto.MemberDTO;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface MemberService {
 
@@ -19,11 +16,11 @@ public interface MemberService {
     @POST("/member/login")
     Call<ResponseBody> loginMember(@Body MemberDTO memberDTO);
 
-    @POST("/member/update")
-    Call<ResponseBody> updateMember(@Body MemberDTO memberDTO);
-
     @POST("/member/logout")
     Call<ResponseBody> logoutMember();
+
+    @POST("/member/update")
+    Call<ResponseBody> updateMember(@Body MemberDTO memberDTO);
 
     @POST("/member/friend/add")
     Call<ResponseBody> addFriend(@Body MemberDTO memberDTO);
@@ -33,9 +30,5 @@ public interface MemberService {
 
     @GET("/member/friend/list")
     Call<List<MemberDTO>> friendList();
-
-
-
-
 
 }
