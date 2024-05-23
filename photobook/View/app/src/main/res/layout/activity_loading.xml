@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#AEC8DF"
     tools:context=".activity.Loading">
 
     <ImageView
         android:id="@+id/loading"
-        android:layout_width="wrap_content"
+        android:layout_width="425dp"
         android:layout_height="218dp"
         android:layout_gravity="center"
-        android:background="#FFFFFF"
+        android:background="#AEC8DF"
         app:srcCompat="@drawable/loading" />
 
     <TextView
