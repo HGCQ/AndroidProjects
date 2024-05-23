@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +25,10 @@ import retrofit2.Response;
 public class Login extends AppCompatActivity {
 
     private Context context;
+    private MemberController mc;
 
     private EditText id, password;
-    private Button login, join;
+    private ImageButton login, join;
 
     @SuppressLint({"MissingInflatedId", "WrongViewCast"})
     @Override
@@ -35,6 +37,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         this.context = this;
+        mc = new MemberController(this);
 
         id = findViewById(R.id.id);
         password = findViewById(R.id.password);
@@ -43,7 +46,6 @@ public class Login extends AppCompatActivity {
 
         Intent joinPage = new Intent(this, Join.class);
         Intent mainPage = new Intent(this, Main.class);
-
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +63,8 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
+                MemberDTO memberDTO = new MemberDTO(userId, userPw);
+
 //                .post(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -69,6 +73,25 @@ public class Login extends AppCompatActivity {
 //                });
 
                 // 로그인 기능 구현
+                mc.loginMember(memberDTO, new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                            Log.d("로그인 성공", "Code: " + response.code());
+                            startActivity(mainPage);
+                        } else {
+                            Toast.makeText(context, "존재하지 않는 아이디거나 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+                            Log.d("로그인 실패", "Code: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(context, "서버 응답 오류", Toast.LENGTH_SHORT).show();
+                        Log.e("로그인 실패", t.getMessage());
+                    }
+                });
             }
         });
 
