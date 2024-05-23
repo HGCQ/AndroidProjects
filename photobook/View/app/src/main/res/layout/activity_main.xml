@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="#C5D1DD"
     tools:context=".activity.Main">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -14,13 +15,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/searchText"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_layout" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/plus"
-        android:layout_width="55dp"
-        android:layout_height="50dp"
+        android:layout_width="59dp"
+        android:layout_height="55dp"
         android:layout_marginTop="660dp"
         android:backgroundTint="#C4D0DC"
         android:scaleType="fitCenter"
@@ -37,17 +47,30 @@
         android:layout_marginTop="4dp"
         android:backgroundTint="#C4D0DC"
         android:scaleType="fitCenter"
-        android:src="@drawable/search"
+        android:src="@drawable/plusicon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.943"
+        app:layout_constraintHorizontal_bias="0.71"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/date"
+        android:layout_width="59dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#C4D0DC"
+        android:scaleType="fitCenter"
+        android:src="@drawable/plusicon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/set"
-        android:layout_width="34dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
         android:background="#C4D0DC"
         android:scaleType="fitCenter"
         android:src="@drawable/seticon"
