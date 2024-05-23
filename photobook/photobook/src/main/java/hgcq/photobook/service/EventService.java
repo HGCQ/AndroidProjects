@@ -54,6 +54,7 @@ public class EventService {
 
         if (events.isEmpty() || !events.contains(event.getDate())) {
             Event newEvent = new Event(event.getName(), event.getDate(), member);
+            newEvent.setContent(event.getContent());
             eventRepository.save(newEvent);
             eventMemberRepository.save(new EventMember(newEvent.getId(), member.getId()));
             log.debug("이벤트 생성 성공");

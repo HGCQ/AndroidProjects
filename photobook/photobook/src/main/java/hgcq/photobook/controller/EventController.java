@@ -37,6 +37,7 @@ public class EventController {
                 Member member = memberService.findOne(loginMember.getEmail());
                 if (member != null) {
                     Event event = new Event(eventDTO.getName(), LocalDate.parse(eventDTO.getDate()));
+                    event.setContent(eventDTO.getContent());
                     eventService.createEvent(event, member);
                     return ResponseEntity.ok().body("이벤트 생성 성공");
                 }
