@@ -8,74 +8,82 @@
     android:background="@drawable/diary"
     tools:context=".activity.Event">
 
+
     <EditText
         android:id="@+id/content"
-        android:layout_width="280dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="32dp"
+        android:layout_width="261dp"
+        android:layout_height="148dp"
+        android:layout_marginBottom="28dp"
         android:hint="내용을 입력하세요."
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
+        app:layout_constraintHorizontal_bias="0.433"
         app:layout_constraintStart_toStartOf="parent" />
-
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
+        android:layout_width="226dp"
+        android:layout_height="268dp"
+        android:layout_marginBottom="84dp"
         app:layout_constraintBottom_toTopOf="@id/content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/post" />
 
     <ImageButton
         android:id="@+id/addPhoto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="260dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="84dp"
+        android:layout_marginBottom="276dp"
+        android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/photolibraryicon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="#234567" />
+
     <ImageButton
         android:id="@+id/save"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="4dp"
+        android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/saveicon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="#234567" />
 
     <ImageButton
         android:id="@+id/back"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="340dp"
+        android:layout_marginEnd="360dp"
         android:layout_marginBottom="688dp"
+        android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/backicon"
-        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#234567"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.003"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/settingList"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:background="#FFFFFF"
-        android:visibility="gone"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="118dp"
-        tools:layout_editor_absoluteY="151dp" />
+        android:layout_width="254dp"
+        android:layout_height="612dp"
+        android:layout_marginEnd="200dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.134" />
 
     <ImageButton
         android:id="@+id/setting"
@@ -83,6 +91,8 @@
         android:layout_height="50dp"
         android:layout_marginEnd="4dp"
         android:scaleType="fitCenter"
+        android:background="#00000000"
+        app:tint="#234567"
         android:src="@drawable/menuicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,26 +109,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.103" />
+        app:layout_constraintVertical_bias="0.119" />
 
     <EditText
         android:id="@+id/title"
         android:layout_width="190dp"
         android:layout_height="38dp"
-        android:layout_marginEnd="160dp"
+        android:layout_marginEnd="156dp"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.619" />
+        app:layout_constraintVertical_bias="0.636" />
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="167dp"
-        android:layout_height="221dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="124dp"
-        tools:layout_editor_absoluteY="160dp" />
+        android:layout_width="156dp"
+        android:layout_height="206dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.283" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
