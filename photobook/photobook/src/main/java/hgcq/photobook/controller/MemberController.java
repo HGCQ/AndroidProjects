@@ -90,6 +90,24 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("회원 정보 수정 실패");
     }
 
+    @GetMapping("/duplicate/name")
+    public ResponseEntity<?> duplicateName(@RequestParam("name") String name) {
+        boolean isNotDuplicate = memberService.duplicateName(name);
+        if (isNotDuplicate) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+    }
+
+    @GetMapping("/duplicate/email")
+    public ResponseEntity<?> duplicateEmail(@RequestParam("email") String email) {
+        boolean isNotDuplicate = memberService.duplicateEmail(email);
+        if (isNotDuplicate) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+    }
+
     // 테스트 완료
     @PostMapping("/friend/add")
     public ResponseEntity<?> addFriend(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {

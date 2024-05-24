@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -211,6 +212,28 @@ public class EventController {
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이벤트를 찾을 수 없습니다.");
+    }
+
+    @GetMapping("/member/owner")
+    public ResponseEntity<?> memberOwner(@RequestParam("date") String date, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            MemberDTO loginMember = (MemberDTO) session.getAttribute("member");
+            if (loginMember != null) {
+                Member member = memberService.findOne(loginMember.getEmail());
+                if (member != null) {
+                    Event findEvent = eventService.searchEventByDate(LocalDate.parse(date), member);
+                    if (findEvent != null) {
+                        if (Objects.equals(findEvent.getMember().getId(), member.getId())) {
+                            return ResponseEntity.ok(true);
+                        } else {
+                            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+                        }
+                    }
+                }
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

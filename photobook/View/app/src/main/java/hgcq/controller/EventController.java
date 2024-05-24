@@ -71,4 +71,9 @@ public class EventController {
         Call<List<MemberDTO>> call = eventService.memberList(date);
         call.enqueue(callback);
     }
+
+    public void owner(String date, Callback<Boolean> callback) {
+        Call<Boolean> call = eventService.owner(date);
+        call.enqueue(callback);
+    }
 }
