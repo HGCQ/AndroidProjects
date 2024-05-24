@@ -141,6 +141,7 @@ public class Main extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NetworkClient.getInstance(context).deleteCookie();
                 mc.logoutMember(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
