@@ -11,13 +11,17 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="580dp"
+        android:layout_height="624dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="50dp"
+        android:gravity="center"
+        android:padding="17dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.496" />
+        app:layout_constraintVertical_bias="0.52" />
 
     <EditText
         android:id="@+id/searchText"
@@ -32,13 +36,14 @@
 
     <ImageButton
         android:id="@+id/plus"
-        android:layout_width="59dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="676dp"
+        android:layout_width="48dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="680dp"
         android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/plusicon"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#234567" />
@@ -52,7 +57,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.708"
+        app:layout_constraintHorizontal_bias="0.691"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#234567" />

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="#AEC8DF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.Gallery">
@@ -11,28 +12,17 @@
         android:id="@+id/back"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/backicon"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.005" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="110dp"
-        android:layout_height="28dp"
-        android:scaleType="fitCenter"
-        android:text="2000-00-00"
-        android:textSize="20sp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintVertical_bias="0.005"
+        app:tint="#234567"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photoList"
@@ -41,12 +31,27 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="50dp"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="17dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="4"
+        app:spanCount="2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.52" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="135dp"
+        android:layout_height="30dp"
+        android:fontFamily="@font/font_layout"
+        android:scaleType="fitCenter"
+        android:text="2000-00-00"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.02" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

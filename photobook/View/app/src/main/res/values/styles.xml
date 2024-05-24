@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="CustomEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">0dp</item>
+    </style>
+</resources>
