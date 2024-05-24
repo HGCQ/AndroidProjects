@@ -58,4 +58,14 @@ public class MemberRepository {
         return em.createQuery("select m.email from Member m", String.class)
                 .getResultList();
     }
+
+    /**
+     * 회원 이름 리스트 검색
+     *
+     * @return 회원 이름 리스트
+     */
+    public List<String> findName() {
+        return em.createQuery("select m.name from Member m", String.class)
+                .getResultList();
+    }
 }

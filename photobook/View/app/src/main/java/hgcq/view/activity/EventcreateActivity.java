@@ -52,6 +52,7 @@ public class EventcreateActivity extends AppCompatActivity {
         content = (EditText) findViewById(R.id.content);
 
         Intent mainPage = new Intent(this, Main.class);
+        Intent eventPage = new Intent(this, Event.class);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +95,10 @@ public class EventcreateActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 Toast.makeText(context, "이벤트 생성 성공!", Toast.LENGTH_SHORT).show();
                                 Log.d("이벤트 생성 성공", "Code: " + response.code());
-                                startActivity(mainPage);
+                                eventPage.putExtra("title", resTitle);
+                                eventPage.putExtra("date", resDate);
+                                eventPage.putExtra("content", resContent);
+                                startActivity(eventPage);
                             } else {
                                 Toast.makeText(context, "이벤트 생성 실패", Toast.LENGTH_SHORT).show();
                                 Log.d("이벤트 생성 실패", "Code: " + response.code());
