@@ -55,8 +55,6 @@ public class Join extends AppCompatActivity {
 
         join = (ImageButton) findViewById(R.id.join);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-
         Intent loginPage = new Intent(this, Login.class);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +73,11 @@ public class Join extends AppCompatActivity {
                 String userName = name.getText().toString();
 
                 // 비어 있는지 확인
-                if (userEmail.isEmpty()) {
+                if (userName.isEmpty()) {
+                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    name.requestFocus();
+                    return;
+                } else if (userEmail.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     email.requestFocus();
                     return;
@@ -86,10 +88,6 @@ public class Join extends AppCompatActivity {
                 } else if (userPwCheck.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     pwdCheck.requestFocus();
-                    return;
-                } else if (userName.isEmpty()) {
-                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    name.requestFocus();
                     return;
                 }
 
