@@ -55,8 +55,6 @@ public class Join extends AppCompatActivity {
 
         join = (ImageButton) findViewById(R.id.join);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-
         Intent loginPage = new Intent(this, Login.class);
 
         back.setOnClickListener(new View.OnClickListener() {
