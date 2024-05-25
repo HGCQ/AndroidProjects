@@ -1,7 +1,9 @@
 package hgcq.controller;
 
 import android.content.Context;
+
 import java.util.List;
+
 import hgcq.config.NetworkClient;
 import hgcq.model.dto.MemberDTO;
 import hgcq.model.service.MemberService;
@@ -30,6 +32,16 @@ public class MemberController {
 
     public void createMember(MemberDTO memberDto, Callback<ResponseBody> callback) {
         Call<ResponseBody> call = memberService.joinMember(memberDto);
+        call.enqueue(callback);
+    }
+
+    public void duplicateName(String name, Callback<ResponseBody> callback) {
+        Call<ResponseBody> call = memberService.duplicateName(name);
+        call.enqueue(callback);
+    }
+
+    public void duplicateEmail(String email, Callback<ResponseBody> callback) {
+        Call<ResponseBody> call = memberService.duplicateEmail(email);
         call.enqueue(callback);
     }
 
