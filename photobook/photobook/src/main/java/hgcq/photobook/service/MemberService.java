@@ -51,7 +51,7 @@ public class MemberService {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
 
-        if (nameList.contains(member.getEmail())) {
+        if (nameList.contains(member.getName())) {
             log.error("회원 가입 실패 : 이미 존재하는 닉네임");
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
