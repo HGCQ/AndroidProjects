@@ -96,6 +96,8 @@ public class PhotoRepository {
      * @param event 이벤트
      */
     public void deleteAll(Event event) {
-        em.createQuery("delete from Photo p where p.event = :event", Photo.class);
+        em.createQuery("delete from Photo p where p.event = :event")
+                .setParameter("event", event)
+                .executeUpdate();
     }
 }
