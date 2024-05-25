@@ -73,7 +73,11 @@ public class Join extends AppCompatActivity {
                 String userName = name.getText().toString();
 
                 // 비어 있는지 확인
-                if (userEmail.isEmpty()) {
+                if (userName.isEmpty()) {
+                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    name.requestFocus();
+                    return;
+                } else if (userEmail.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     email.requestFocus();
                     return;
@@ -84,10 +88,6 @@ public class Join extends AppCompatActivity {
                 } else if (userPwCheck.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     pwdCheck.requestFocus();
-                    return;
-                } else if (userName.isEmpty()) {
-                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    name.requestFocus();
                     return;
                 }
 
