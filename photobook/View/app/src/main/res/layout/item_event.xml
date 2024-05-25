@@ -11,12 +11,13 @@
         android:layout_height="50dp"
         android:text="date"
         android:gravity="center"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:fontFamily="@font/font_layout"/>
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="100dp"
-        android:src="@drawable/diary" />
+        android:src="@drawable/cover" />
 
     <TextView
         android:id="@+id/title"
@@ -24,6 +25,7 @@
         android:layout_height="50dp"
         android:text="title"
         android:gravity="center"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:fontFamily="@font/font_layout"/>
 
 </LinearLayout>
