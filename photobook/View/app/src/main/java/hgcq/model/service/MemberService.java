@@ -25,10 +25,10 @@ public interface MemberService {
     Call<ResponseBody> updateMember(@Body MemberDTO memberDTO);
 
     @GET("/member/duplicate/name")
-    Call<ResponseBody> duplicateName(@Query("name") String name);
+    Call<Boolean> duplicateName(@Query("name") String name);
 
     @GET("/member/duplicate/email")
-    Call<ResponseBody> duplicateEmail(@Query("email") String email);
+    Call<Boolean> duplicateEmail(@Query("email") String email);
 
     @POST("/member/friend/add")
     Call<ResponseBody> addFriend(@Body MemberDTO memberDTO);
@@ -38,5 +38,8 @@ public interface MemberService {
 
     @GET("/member/friend/list")
     Call<List<MemberDTO>> friendList();
+
+    @GET("/member/me")
+    Call<MemberDTO>me();
 
 }
