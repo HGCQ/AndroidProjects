@@ -44,10 +44,16 @@ public class MemberService {
     @Synchronized
     public Long join(Member member) {
         List<String> emailList = memberRepository.findEmail();
+        List<String> nameList = memberRepository.findName();
 
         if (emailList.contains(member.getEmail())) {
             log.error("회원 가입 실패 : 이미 존재하는 아이디");
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+
+        if (nameList.contains(member.getName())) {
+            log.error("회원 가입 실패 : 이미 존재하는 닉네임");
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
 
         memberRepository.save(member);
@@ -113,6 +119,28 @@ public class MemberService {
 
         log.debug("회원 정보 수정 성공");
         memberRepository.save(findMember);
+    }
+
+    /**
+     * 이메일 중복 검사
+     *
+     * @param email 이메일
+     * @return 중복 여부
+     */
+    public boolean duplicateEmail(String email) {
+        List<String> emails = memberRepository.findEmail();
+        return !emails.contains(email);
+    }
+
+    /**
+     * 닉네임 중복 검사
+     *
+     * @param name 닉네임
+     * @return 중복 여부
+     */
+    public boolean duplicateName(String name) {
+        List<String> names = memberRepository.findName();
+        return !names.contains(name);
     }
 
     /**

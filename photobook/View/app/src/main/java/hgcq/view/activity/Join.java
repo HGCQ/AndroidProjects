@@ -27,7 +27,7 @@ import retrofit2.Response;
 public class Join extends AppCompatActivity {
 
     private EditText email, pwd, pwdCheck, name;
-    private ImageButton join;
+    private ImageButton join, back;
     private Spinner spinner;
 
     private Context context;
@@ -47,6 +47,7 @@ public class Join extends AppCompatActivity {
 
         this.context = this;
 
+        back = (ImageButton) findViewById(R.id.back);
         email = (EditText) findViewById(R.id.email);
         pwd = (EditText) findViewById(R.id.password);
         pwdCheck = (EditText) findViewById(R.id.passwordCheck);
@@ -54,9 +55,14 @@ public class Join extends AppCompatActivity {
 
         join = (ImageButton) findViewById(R.id.join);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-
         Intent loginPage = new Intent(this, Login.class);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(loginPage);
+            }
+        });
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +73,11 @@ public class Join extends AppCompatActivity {
                 String userName = name.getText().toString();
 
                 // 비어 있는지 확인
-                if (userEmail.isEmpty()) {
+                if (userName.isEmpty()) {
+                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    name.requestFocus();
+                    return;
+                } else if (userEmail.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     email.requestFocus();
                     return;
@@ -78,10 +88,6 @@ public class Join extends AppCompatActivity {
                 } else if (userPwCheck.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     pwdCheck.requestFocus();
-                    return;
-                } else if (userName.isEmpty()) {
-                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    name.requestFocus();
                     return;
                 }
 

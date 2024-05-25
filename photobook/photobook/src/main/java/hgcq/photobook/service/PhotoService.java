@@ -66,25 +66,14 @@ public class PhotoService {
         log.debug("사진 업로드 성공");
     }
 
-    /**
-     * 사진 삭제
-     *
-     * @param imageName 사진 이름
-     * @param event     이벤트
-     * @param member    회원
-     */
-    @Transactional
-    public boolean deletePhoto(String imageName, Event event, Member member) {
-        if (imageName == null || event == null || member == null) {
-            log.error("사진 삭제 실패");
-            return false;
-        }
 
-        Photo findPhoto = findPhoto(imageName, event, member);
+    @Transactional
+    public boolean deletePhoto(String path, Member member) {
+        Photo findPhoto = photoRepository.findByPath(path);
 
         if (findPhoto == null) {
-            log.error("사진 삭제 실패");
-            return false;
+            log.error("사진이 없습니다.");
+            throw new IllegalArgumentException("잘못된 파일입니다.");
         }
 
         photoRepository.delete(findPhoto);

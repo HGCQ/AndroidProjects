@@ -24,16 +24,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import hgcq.adapter.MemberAdapter;
 import hgcq.config.NetworkClient;
 import hgcq.controller.EventController;
-import hgcq.controller.MemberController;
 import hgcq.controller.PhotoController;
+import hgcq.model.dto.EventDTO;
+import hgcq.model.dto.MemberDTO;
 import hgcq.view.R;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Event extends AppCompatActivity {
 
+    // Controller
+    private PhotoController pc;
+    private EventController ec;
+
     // View
-    private ImageButton back, setting, addPhoto, save;
+    private ImageButton back, setting, addPhoto, save, exit, add;
     private EditText title, content;
     private TextView date;
     private RecyclerView settingList;
@@ -41,7 +56,9 @@ public class Event extends AppCompatActivity {
 
     // Config
     private boolean isRecyclerViewVisible = false;
+    private boolean isOwner = false;
     private Context context;
+    private NetworkClient client;
 
     // Status Code
     private static final int REQUEST_GALLERY = 1000; // 갤러리
@@ -52,27 +69,34 @@ public class Event extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
+        client = NetworkClient.getInstance(this);
         this.context = this;
+
+        pc = new PhotoController(this);
+        ec = new EventController(this);
 
         back = (ImageButton) findViewById(R.id.back);
         setting = (ImageButton) findViewById(R.id.setting);
         addPhoto = (ImageButton) findViewById(R.id.addPhoto);
         save = (ImageButton) findViewById(R.id.save);
+        exit = (ImageButton) findViewById(R.id.exit);
+        add = (ImageButton) findViewById(R.id.add);
 
         title = (EditText) findViewById(R.id.title);
         content = (EditText) findViewById(R.id.content);
         date = (TextView) findViewById(R.id.date);
 
-        settingList = (RecyclerView) findViewById(R.id.settingList);
         photo = (ImageView) findViewById(R.id.photo);
 
+        settingList = (RecyclerView) findViewById(R.id.settingList);
         settingList.setLayoutManager(new LinearLayoutManager(context));
 
-        Intent main = new Intent(this, Main.class);
+        Intent mainPage = new Intent(this, Main.class);
+        Intent galleryPage = new Intent(this, Gallery.class);
 
         Intent get = getIntent();
         String resDate = get.getStringExtra("date");
-        String resTitle = get.getStringExtra("name");
+        String resTitle = get.getStringExtra("title");
         String resContent = get.getStringExtra("content");
 
         runOnUiThread(new Runnable() {
@@ -85,13 +109,65 @@ public class Event extends AppCompatActivity {
                 } else {
                     content.setText(resContent);
                 }
+                pc.getPhotos(resDate, new Callback<List<String>>() {
+                    @Override
+                    public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                        if (response.isSuccessful()) {
+                            List<String> photoUrlList = response.body();
+                            if (!photoUrlList.isEmpty()) {
+                                int random = (int) (Math.random() * photoUrlList.size());
+                                String url = photoUrlList.get(random);
+                                String serverIp = client.getServerIp();
+
+                                Glide.with(context)
+                                        .load(serverIp + url)
+                                        .into(photo);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<String>> call, Throwable t) {
+                        Log.e("서버 응답 실패", t.getMessage());
+                    }
+                });
+            }
+        });
+
+        ec.memberList(resDate, new Callback<List<MemberDTO>>() {
+            @Override
+            public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
+                if (response.isSuccessful()) {
+                    List<MemberDTO> memberList = response.body();
+                    MemberAdapter adapter = new MemberAdapter(memberList);
+                    settingList.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MemberDTO>> call, Throwable t) {
+                Log.e("서버 응답 실패", t.getMessage());
+            }
+        });
+
+        ec.owner(resDate, new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful()) {
+                    isOwner = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Log.e("서버 응답 실패", t.getMessage());
             }
         });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(main);
+                startActivity(mainPage);
             }
         });
 
@@ -99,14 +175,26 @@ public class Event extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isRecyclerViewVisible) {
-                    // 회원 리스트 조회
                     Animation slideOut = AnimationUtils.loadAnimation(context, R.anim.slide_out);
                     settingList.startAnimation(slideOut);
+                    exit.startAnimation(slideOut);
                     settingList.setVisibility(View.GONE);
+                    exit.setVisibility(View.GONE);
+                    if (isOwner) {
+                        add.startAnimation(slideOut);
+                        add.setVisibility(View.GONE);
+                    }
+
                 } else {
                     Animation slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in);
                     settingList.startAnimation(slideIn);
+                    exit.startAnimation(slideIn);
                     settingList.setVisibility(View.VISIBLE);
+                    exit.setVisibility(View.VISIBLE);
+                    if (isOwner) {
+                        add.startAnimation(slideIn);
+                        add.setVisibility(View.VISIBLE);
+                    }
                 }
                 isRecyclerViewVisible = !isRecyclerViewVisible;
             }
@@ -132,10 +220,77 @@ public class Event extends AppCompatActivity {
             }
         });
 
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                galleryPage.putExtra("date", resDate);
+                galleryPage.putExtra("title", resTitle);
+                galleryPage.putExtra("content", resContent);
+                startActivity(galleryPage);
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventDTO eventDTO = new EventDTO();
+                eventDTO.setDate(resDate);
+                ec.deleteEvent(eventDTO, new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(context, "이벤트 삭제 성공!", Toast.LENGTH_SHORT).show();
+                            Log.d("이벤트 삭제 성공", "Code: " + response.code());
+                            startActivity(mainPage);
+                        } else {
+                            Toast.makeText(context, "이벤트 삭제 실패", Toast.LENGTH_SHORT).show();
+                            Log.d("이벤트 삭제 실패", "Code: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(context, "서버 응답 오류", Toast.LENGTH_SHORT).show();
+                        Log.e("이벤트 삭제 실패", t.getMessage());
+                    }
+                });
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 이벤트 수정
+                String reqTitle = title.getText().toString();
+                String reqContent = content.getText().toString();
+                EventDTO eventDTO = new EventDTO();
+                eventDTO.setDate(resDate);
+                eventDTO.setName(reqTitle);
+                eventDTO.setContent(reqContent);
+                ec.updateEvent(eventDTO, new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(context, "이벤트 수정 성공!", Toast.LENGTH_SHORT).show();
+                            Log.d("이벤트 수정 성공", "Code: " + response.code());
+                        } else {
+                            Toast.makeText(context, "이벤트 수정 실패", Toast.LENGTH_SHORT).show();
+                            Log.d("이벤트 수정 실패", "Code: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(context, "서버 응답 오류", Toast.LENGTH_SHORT).show();
+                        Log.e("이벤트 수정 실패", t.getMessage());
+                    }
+                });
             }
         });
 
@@ -151,9 +306,31 @@ public class Event extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        date = (TextView) findViewById(R.id.date);
         if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri photoUrl = data.getData();
             // 사진 업로드
+            pc.uploadPhoto(photoUrl, getImageName(photoUrl), date.getText().toString(), new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(context, "사진 업로드 성공!", Toast.LENGTH_SHORT).show();
+                        Log.d("사진 업로드 성공", "Code: " + response.code());
+                        Glide.with(context)
+                                .load(photoUrl)
+                                .into(photo);
+                    } else {
+                        Toast.makeText(context, "사진 업로드 실패", Toast.LENGTH_SHORT).show();
+                        Log.d("사진 업로드 실패", "Code: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(context, "서버 응답 실패", Toast.LENGTH_SHORT).show();
+                    Log.e("서버 응답 실패", t.getMessage());
+                }
+            });
         }
     }
 

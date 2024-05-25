@@ -6,6 +6,7 @@ import hgcq.photobook.domain.Member;
 import hgcq.photobook.dto.EventDTO;
 import hgcq.photobook.repository.EventMemberRepository;
 import hgcq.photobook.repository.EventRepository;
+import hgcq.photobook.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMemberRepository eventMemberRepository;
+    private final PhotoRepository photoRepository;
 
     /**
      * 이벤트 생성
@@ -54,6 +56,7 @@ public class EventService {
 
         if (events.isEmpty() || !events.contains(event.getDate())) {
             Event newEvent = new Event(event.getName(), event.getDate(), member);
+            newEvent.setContent(event.getContent());
             eventRepository.save(newEvent);
             eventMemberRepository.save(new EventMember(newEvent.getId(), member.getId()));
             log.debug("이벤트 생성 성공");
@@ -82,6 +85,7 @@ public class EventService {
             // 삭제하려는 사람과 소유자 같은 상황
             if (Objects.equals(event.getMember().getId(), member.getId())) {
                 eventMemberRepository.deleteAll(event);
+                photoRepository.deleteAll(event);
                 eventRepository.delete(event);
             }
             // 다른 상황
@@ -117,8 +121,8 @@ public class EventService {
     /**
      * 이벤트 내용 설정
      *
-     * @param date    날짜
-     * @param member  회원
+     * @param date     날짜
+     * @param member   회원
      * @param eventDTO 수정된 이벤트
      * @return 내용
      */
@@ -140,7 +144,7 @@ public class EventService {
             log.error("내용 설정 실패 : 이름이 존재하지 않음");
             throw new IllegalArgumentException("이름이 존재하지 않습니다.");
         }
-        
+
         if (eventDTO.getContent() == null) {
             log.error("내용 설정 실패 : 내용이 존재하지 않음");
             throw new IllegalArgumentException("내용이 존재하지 않습니다.");

@@ -1,14 +1,10 @@
 package hgcq.model.service;
 
-
-import com.google.gson.Gson;
-
 import java.util.List;
 
 import hgcq.model.dto.EventDTO;
 import hgcq.model.dto.MemberDTO;
 import hgcq.model.dto.MemberInvitationDTO;
-import kotlin.ParameterName;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -36,14 +32,13 @@ public interface EventService {
     @GET("/event/find/name")
     Call<List<EventDTO>> findByName(@Query("name") String name);
 
-    @GET("/event/eventlist")
+    @GET("/event/list")
     Call<List<EventDTO>> eventList();
 
     @GET("/event/member/list")
     Call<List<MemberDTO>> memberList(@Query("date") String date);
 
-
-
-
+    @GET("/event/member/owner")
+    Call<Boolean> owner(@Query("date") String date);
 
 }

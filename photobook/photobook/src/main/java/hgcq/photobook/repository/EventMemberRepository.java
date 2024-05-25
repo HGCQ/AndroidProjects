@@ -65,10 +65,15 @@ public class EventMemberRepository {
      * @return 이벤트
      */
     public Event findEventByDate(LocalDate date, Member member) {
-        return em.createQuery("select em.event from EventMember em where em.event.date = :date and em.member = :member", Event.class)
-                .setParameter("date", date)
-                .setParameter("member", member)
-                .getSingleResult();
+        try {
+            return em.createQuery(
+                            "select em.event from EventMember em where em.event.date = :date and em.member = :member", Event.class)
+                    .setParameter("date", date)
+                    .setParameter("member", member)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -79,8 +84,8 @@ public class EventMemberRepository {
      * @return 이벤트 리스트
      */
     public List<Event> findEventByName(String name, Member member) {
-        return em.createQuery("select em.event from EventMember em where em.event.name = :name and em.member = :member", Event.class)
-                .setParameter("name", name)
+        return em.createQuery("select em.event from EventMember em where em.event.name LIKE :name and em.member = :member order by em.event.date", Event.class)
+                .setParameter("name", "%" + name + "%")
                 .setParameter("member", member)
                 .getResultList();
     }
@@ -133,7 +138,7 @@ public class EventMemberRepository {
      * @return 이벤트 리스트
      */
     public List<Event> findEvents(Member member) {
-        return em.createQuery("select em.event from EventMember em where em.member = :member", Event.class)
+        return em.createQuery("select em.event from EventMember em where em.member = :member order by em.event.date", Event.class)
                 .setParameter("member", member)
                 .getResultList();
     }
@@ -145,7 +150,7 @@ public class EventMemberRepository {
      * @return 이벤트 날짜 리스트
      */
     public List<LocalDate> findEventsToDate(Member member) {
-        return em.createQuery("select em.event.date from EventMember em where em.member = :member", LocalDate.class)
+        return em.createQuery("select em.event.date from EventMember em where em.member = :member order by em.event.date", LocalDate.class)
                 .setParameter("member", member)
                 .getResultList();
     }

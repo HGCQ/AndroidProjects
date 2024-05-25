@@ -1,12 +1,14 @@
 package hgcq.model.service;
 
 import java.util.List;
+
 import hgcq.model.dto.MemberDTO;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface MemberService {
 
@@ -21,6 +23,12 @@ public interface MemberService {
 
     @POST("/member/update")
     Call<ResponseBody> updateMember(@Body MemberDTO memberDTO);
+
+    @GET("/member/duplicate/name")
+    Call<ResponseBody> duplicateName(@Query("name") String name);
+
+    @GET("/member/duplicate/email")
+    Call<ResponseBody> duplicateEmail(@Query("email") String email);
 
     @POST("/member/friend/add")
     Call<ResponseBody> addFriend(@Body MemberDTO memberDTO);

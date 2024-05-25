@@ -21,7 +21,7 @@ import retrofit2.Callback;
 /**
  * 서버와 통신 API (사진 관련)
  * 사진 업로드 - uploadPhoto(Uri photoUri, String photoName, String eventDate, Callback<ResponseBody> callback) // 현재 갤러리에서 사진 하나만 선택이 가능
- * 사진 삭제 - deletePhoto(String photoName, String eventDate, Callback<ResponseBody> callback) // 현재 갤러리에서 사진 하나만 선택이 가능
+ * 사진 삭제 - deletePhoto(PhotoDTO photoDTO, Callback<ResponseBody> callback) // 현재 갤러리에서 사진 하나만 선택이 가능
  * 사진 리스트 조회 - getPhotos(String eventDate, Callback<List<String>> callback)
  */
 public class PhotoController {
@@ -61,13 +61,10 @@ public class PhotoController {
     /**
      * 사진 삭제
      *
-     * @param photoName 사진 이름
-     * @param eventDate 이벤트 날짜
-     * @param callback  콜백
+     * @param photoDTO 사진 객체
+     * @param callback 콜백
      */
-    public void deletePhoto(String photoName, String eventDate, Callback<ResponseBody> callback) {
-        PhotoDTO photoDTO = new PhotoDTO(photoName, eventDate);
-
+    public void deletePhoto(PhotoDTO photoDTO, Callback<ResponseBody> callback) {
         Call<ResponseBody> call = photoService.deletePhoto(photoDTO);
         call.enqueue(callback);
     }
