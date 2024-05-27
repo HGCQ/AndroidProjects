@@ -3,6 +3,7 @@ package hgcq.photobook.controller;
 import hgcq.photobook.domain.Member;
 import hgcq.photobook.dto.MemberDTO;
 import hgcq.photobook.service.MemberService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.session.Session;
+import org.springframework.session.data.redis.RedisSessionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,7 @@ public class MemberController {
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     private final MemberService memberService;
+    private final RedisSessionRepository sessionRepository;
 
     // 테스트 완료
     @PostMapping("/join")
@@ -105,6 +109,47 @@ public class MemberController {
         if (isNotDuplicate) {
             return ResponseEntity.ok(true);
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            MemberDTO existingMember = (MemberDTO) session.getAttribute("member");
+
+            if (existingMember != null) {
+                Member findMember = memberService.findOne(existingMember.getEmail());
+
+                if (findMember != null) {
+                    return ResponseEntity.ok(existingMember);
+                }
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 중이 아닙니다.");
+    }
+
+    @GetMapping("/islogin")
+    public ResponseEntity<?> islogin(HttpServletRequest request) {
+        String sessionId = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("SESSION".equals(cookie.getName())) {
+                    sessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (sessionId != null) {
+            Session session = sessionRepository.findById(sessionId);
+            if (session != null) {
+                return ResponseEntity.ok(true);
+            }
+        }
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
     }
 
