@@ -79,4 +79,14 @@ public class MemberController {
         Call<MemberDTO> call = memberService.me();
         call.enqueue(callback);
     }
+
+
+    public void islogin(Callback<Boolean> callback ){
+        Call<Boolean> call = memberService.islogin();
+        call.enqueue(callback);
+
+    }
+
+
+
 }

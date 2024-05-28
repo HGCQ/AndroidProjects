@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="46dp"
+        android:layout_height="40dp"
+        android:src="@drawable/profile" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="3dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/font_layout"
+        android:text="name"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="3dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/font_layout"
+        android:text="email"
+        android:textSize="12sp" />
+
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_width="2dp"
+        android:layout_height="9dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="#00000000"
+        android:src="@drawable/remove"
+        android:tint="#FF0000" />
+
+</LinearLayout>
