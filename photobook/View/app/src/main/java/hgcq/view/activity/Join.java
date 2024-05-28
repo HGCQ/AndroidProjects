@@ -2,6 +2,7 @@ package hgcq.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +10,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
+
+
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +30,7 @@ public class Join extends AppCompatActivity {
 
     private EditText email, pwd, pwdCheck, name;
     private ImageButton join, back, emailCheck, nameCheck;
-    private Spinner spinner;
+
 
     private Context context;
 
@@ -54,12 +56,12 @@ public class Join extends AppCompatActivity {
         back = (ImageButton) findViewById(R.id.back);
         email = (EditText) findViewById(R.id.email);
         pwd = (EditText) findViewById(R.id.password);
+        emailCheck=(ImageButton)findViewById(R.id.emailCheck);
+        nameCheck=(ImageButton)findViewById(R.id.nameCheck);
         pwdCheck = (EditText) findViewById(R.id.passwordCheck);
         name = (EditText) findViewById(R.id.name);
-
         join = (ImageButton) findViewById(R.id.join);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
 
 
         Intent loginPage = new Intent(this, Login.class);
@@ -160,7 +162,7 @@ public class Join extends AppCompatActivity {
                     return;
                 }
 
-                userEmail = userEmail + "@" + spinner.getSelectedItem().toString();
+                userEmail = userEmail + "@" + email.getText().toString();
 
                 // 정규식 확인
                 if (!Pattern.matches(regEmail, userEmail)) {

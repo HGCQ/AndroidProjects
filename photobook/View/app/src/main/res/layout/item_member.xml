@@ -4,21 +4,31 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="16dp">
-    
+
+    <ImageView
+        android:layout_width="46dp"
+        android:layout_height="40dp"
+        android:src="@drawable/profile" />
+
     <TextView
         android:id="@+id/name"
-        android:layout_width="0dp"
+        android:layout_width="3dp"
         android:layout_height="40dp"
         android:layout_weight="1"
-        android:textSize="15sp"
-        android:text="name" />
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/font_layout"
+        android:text="name"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/email"
-        android:layout_width="0dp"
+        android:layout_width="3dp"
         android:layout_height="40dp"
         android:layout_weight="1"
-        android:textSize="15sp"
-        android:text="email" />
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/font_layout"
+        android:text="email"
+        android:textSize="12sp" />
+
 
 </LinearLayout>

@@ -42,4 +42,7 @@ public interface MemberService {
     @GET("/member/me")
     Call<MemberDTO>me();
 
+    @GET("/islogin")
+    Call<Boolean>islogin();
+
 }

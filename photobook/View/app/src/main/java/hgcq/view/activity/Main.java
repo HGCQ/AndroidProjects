@@ -42,9 +42,9 @@ public class Main extends AppCompatActivity {
     private Context context;
     private EventAdapter eventAdapter;
 
-    private ImageButton set, search, plus, date, logout;
+    private ImageButton set, search, plus, date, logout, friend, modify;
     private RecyclerView eventListView;
-    private RecyclerView friendListView;
+    private RecyclerView settingListView;
 
     private EditText searchText;
     private boolean isShowRecyclerView = false;
@@ -63,9 +63,11 @@ public class Main extends AppCompatActivity {
         plus = (ImageButton) findViewById(R.id.plus);
         date = (ImageButton) findViewById(R.id.date);
         logout = (ImageButton) findViewById(R.id.logout);
+        friend = (ImageButton) findViewById(R.id.friend);
+        modify = (ImageButton) findViewById(R.id.modify);
 
         eventListView = (RecyclerView) findViewById(R.id.eventList);
-        friendListView = (RecyclerView) findViewById(R.id.friendList);
+        settingListView = (RecyclerView) findViewById(R.id.settingList);
 
         searchText = (EditText) findViewById(R.id.searchText);
 
@@ -102,35 +104,27 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        mc.friendList(new Callback<List<MemberDTO>>() {
-            @Override
-            public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
-                if (response.isSuccessful()) {
-                    List<MemberDTO> friendList = response.body();
-                    MemberAdapter adapter = new MemberAdapter(friendList);
-                    friendListView.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<MemberDTO>> call, Throwable t) {
-                Log.e("서버 응답 실패", t.getMessage());
-            }
-        });
-
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isShowRecyclerView) {
                     Animation slideOut = AnimationUtils.loadAnimation(context, R.anim.slide_out);
-                    friendListView.startAnimation(slideOut);
-                    friendListView.setVisibility(View.GONE);
+                    settingListView.startAnimation(slideOut);
+                    settingListView.setVisibility(View.GONE);
+                    friend.startAnimation(slideOut);
+                    friend.setVisibility(View.GONE);
+                    modify.startAnimation(slideOut);
+                    modify.setVisibility(View.GONE);
                     logout.startAnimation(slideOut);
                     logout.setVisibility(View.GONE);
                 } else {
                     Animation slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in);
-                    friendListView.startAnimation(slideIn);
-                    friendListView.setVisibility(View.VISIBLE);
+                    settingListView.startAnimation(slideIn);
+                    settingListView.setVisibility(View.VISIBLE);
+                    friend.startAnimation(slideIn);
+                    friend.setVisibility(View.VISIBLE);
+                    modify.startAnimation(slideIn);
+                    modify.setVisibility(View.VISIBLE);
                     logout.startAnimation(slideIn);
                     logout.setVisibility(View.VISIBLE);
                 }
@@ -141,6 +135,7 @@ public class Main extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NetworkClient.getInstance(context).deleteCookie();
                 mc.logoutMember(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

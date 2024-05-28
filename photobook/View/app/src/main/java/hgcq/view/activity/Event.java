@@ -270,6 +270,7 @@ public class Event extends AppCompatActivity {
                 String reqTitle = title.getText().toString();
                 String reqContent = content.getText().toString();
                 EventDTO eventDTO = new EventDTO();
+                eventDTO.setDate(resDate);
                 eventDTO.setName(reqTitle);
                 eventDTO.setContent(reqContent);
                 ec.updateEvent(eventDTO, new Callback<ResponseBody>() {
