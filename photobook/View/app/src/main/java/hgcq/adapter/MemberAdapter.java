@@ -19,7 +19,10 @@ import hgcq.view.R;
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> {
 
+
     private List<MemberDTO> memberList;
+
+
 
     public MemberAdapter(List<MemberDTO> memberList) {
         this.memberList = memberList;
@@ -36,15 +39,24 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         }
     }
 
+
+
+
+
+
     @NonNull
     @Override
     public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View MemberView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_member, parent, false);
-        return new MemberViewHolder(MemberView);
+
+
+            View eventView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
+            return new MemberViewHolder(eventView);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
+
         MemberDTO member = memberList.get(position);
         holder.name.setText(member.getName());
         holder.email.setText(member.getEmail());

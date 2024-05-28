@@ -30,13 +30,5 @@
         android:text="email"
         android:textSize="12sp" />
 
-    <ImageButton
-        android:layout_width="20dp"
-        android:layout_height="3dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:tint="#FF0000"
-        android:background="#00000000"
-        android:src="@drawable/remove" />
 
 </LinearLayout>

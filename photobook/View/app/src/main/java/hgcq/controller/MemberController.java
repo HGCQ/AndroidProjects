@@ -35,13 +35,13 @@ public class MemberController {
         call.enqueue(callback);
     }
 
-    public void duplicateName(String name, Callback<ResponseBody> callback) {
-        Call<ResponseBody> call = memberService.duplicateName(name);
+    public void duplicateName(String name, Callback<Boolean> callback) {
+        Call<Boolean> call = memberService.duplicateName(name);
         call.enqueue(callback);
     }
 
-    public void duplicateEmail(String email, Callback<ResponseBody> callback) {
-        Call<ResponseBody> call = memberService.duplicateEmail(email);
+    public void duplicateEmail(String email, Callback<Boolean> callback) {
+        Call<Boolean> call = memberService.duplicateEmail(email);
         call.enqueue(callback);
     }
 
@@ -72,6 +72,11 @@ public class MemberController {
 
     public void friendList(Callback<List<MemberDTO>> callback) {
         Call<List<MemberDTO>> call = memberService.friendList();
+        call.enqueue(callback);
+    }
+
+    public void me(Callback<MemberDTO> callback) {
+        Call<MemberDTO> call = memberService.me();
         call.enqueue(callback);
     }
 }
