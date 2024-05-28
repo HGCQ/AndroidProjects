@@ -49,6 +49,12 @@
         <activity
             android:name=".activity.Main"
             android:exported="true" />
+        <activity
+            android:name=".activity.Friend"
+            android:exported="true" />
+        <activity
+            android:name=".activity.Modify"
+            android:exported="true" />
     </application>
 
 </manifest>
