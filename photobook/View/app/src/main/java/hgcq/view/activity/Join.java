@@ -55,14 +55,12 @@ public class Join extends AppCompatActivity {
 
         back = (ImageButton) findViewById(R.id.back);
         email = (EditText) findViewById(R.id.email);
-        pwd = (EditText) findViewById(R.id.password);
-        emailCheck=(ImageButton)findViewById(R.id.emailCheck);
-        nameCheck=(ImageButton)findViewById(R.id.nameCheck);
-        pwdCheck = (EditText) findViewById(R.id.passwordCheck);
-        name = (EditText) findViewById(R.id.name);
         join = (ImageButton) findViewById(R.id.join);
-
-
+        emailCheck=(ImageButton)findViewById(R.id.emailCheck);
+        pwdCheck = (EditText) findViewById(R.id.passwordCheck);
+        nameCheck=(ImageButton)findViewById(R.id.nameCheck);
+        pwd = (EditText) findViewById(R.id.password);
+        name = (EditText) findViewById(R.id.name);
 
         Intent loginPage = new Intent(this, Login.class);
 
