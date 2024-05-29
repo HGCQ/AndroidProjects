@@ -12,6 +12,7 @@
         android:text="date"
         android:gravity="center"
         android:textSize="23sp"
+        android:textColor="#000"
         android:fontFamily="@font/font_layout"/>
 
     <ImageView
@@ -26,6 +27,7 @@
         android:text="title"
         android:gravity="center"
         android:textSize="23sp"
+        android:textColor="#000"
         android:fontFamily="@font/font_layout"/>
 
 </LinearLayout>
