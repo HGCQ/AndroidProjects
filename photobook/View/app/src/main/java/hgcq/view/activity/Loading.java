@@ -23,7 +23,9 @@ public class Loading extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         client = NetworkClient.getInstance(this);
 
         loading = findViewById(R.id.loading);
