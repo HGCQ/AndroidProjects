@@ -62,6 +62,13 @@ public class PhotoService {
             throw new IllegalArgumentException("이벤트가 없습니다.");
         }
 
+        List<String> imageNames = photoRepository.findImageNames(findEvent);
+
+        if (imageNames.contains(photo.getImageName())) {
+            log.error("사진 업로드 실패");
+            throw new IllegalArgumentException("똑같은 사진이 있습니다.");
+        }
+
         photoRepository.save(photo);
         log.debug("사진 업로드 성공");
     }
