@@ -19,10 +19,7 @@ import hgcq.view.R;
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> {
 
-
     private List<MemberDTO> memberList;
-
-
 
     public MemberAdapter(List<MemberDTO> memberList) {
         this.memberList = memberList;
@@ -30,36 +27,30 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
     public static class MemberViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public TextView email;
 
         public MemberViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.name);
-            email = view.findViewById(R.id.email);
         }
     }
 
-
-
-
-
+    public void addFriend(MemberDTO newFriend) {
+        this.memberList.add(newFriend);
+        notifyItemInserted(memberList.size() - 1);
+    }
 
     @NonNull
     @Override
     public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-
-            View eventView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
-            return new MemberViewHolder(eventView);
+        View eventView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_member, parent, false);
+        return new MemberViewHolder(eventView);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
-
         MemberDTO member = memberList.get(position);
         holder.name.setText(member.getName());
-        holder.email.setText(member.getEmail());
     }
 
     @Override
@@ -67,3 +58,4 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         return memberList.size();
     }
 }
+
