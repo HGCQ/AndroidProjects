@@ -3,6 +3,7 @@ package hgcq.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,8 +11,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -26,15 +29,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import hgcq.adapter.EventInviteAdapter;
 import hgcq.adapter.MemberAdapter;
 import hgcq.config.NetworkClient;
 import hgcq.controller.EventController;
+import hgcq.controller.MemberController;
 import hgcq.controller.PhotoController;
 import hgcq.model.dto.EventDTO;
 import hgcq.model.dto.MemberDTO;
+import hgcq.model.dto.MemberInvitationDTO;
 import hgcq.view.R;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -45,20 +50,23 @@ public class Event extends AppCompatActivity {
 
     // Controller
     private PhotoController pc;
+    private MemberController mc;
     private EventController ec;
 
     // View
     private ImageButton back, setting, addPhoto, save, exit, add;
     private EditText title, content;
     private TextView date;
-    private RecyclerView settingList;
+    private RecyclerView settingList, friendList;
     private ImageView photo;
 
     // Config
-    private boolean isRecyclerViewVisible = false;
+    private boolean isSettingViewVisible = false;
     private boolean isOwner = false;
     private Context context;
     private NetworkClient client;
+    private EventInviteAdapter eventInviteAdapter;
+    private MemberAdapter memberAdapter;
 
     // Status Code
     private static final int REQUEST_GALLERY = 1000; // 갤러리
@@ -69,11 +77,16 @@ public class Event extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         client = NetworkClient.getInstance(this);
         this.context = this;
 
         pc = new PhotoController(this);
         ec = new EventController(this);
+        mc = new MemberController(this);
 
         back = (ImageButton) findViewById(R.id.back);
         setting = (ImageButton) findViewById(R.id.setting);
@@ -90,6 +103,9 @@ public class Event extends AppCompatActivity {
 
         settingList = (RecyclerView) findViewById(R.id.settingList);
         settingList.setLayoutManager(new LinearLayoutManager(context));
+
+        friendList = (RecyclerView) findViewById(R.id.friendList);
+        friendList.setLayoutManager(new LinearLayoutManager(context));
 
         Intent mainPage = new Intent(this, Main.class);
         Intent galleryPage = new Intent(this, Gallery.class);
@@ -134,13 +150,57 @@ public class Event extends AppCompatActivity {
             }
         });
 
+        mc.friendList(new Callback<List<MemberDTO>>() {
+            @Override
+            public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
+                if (response.isSuccessful()) {
+                    List<MemberDTO> friends = response.body();
+                    eventInviteAdapter = new EventInviteAdapter(friends);
+                    friendList.setAdapter(eventInviteAdapter);
+                    eventInviteAdapter.setOnItemClickListener(new EventInviteAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            MemberDTO memberDTO = friends.get(position);
+                            EventDTO eventDTO = new EventDTO(resTitle, resDate, resContent);
+                            MemberInvitationDTO memberInvitationDTO = new MemberInvitationDTO(eventDTO, memberDTO);
+                            ec.inviteEvent(memberInvitationDTO, new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if (response.isSuccessful()) {
+                                        Toast.makeText(context, "친구 초대 성공!", Toast.LENGTH_SHORT).show();
+                                        Log.d("친구 초대 성공", "Code: " + response.code());
+                                        memberAdapter.addFriend(memberDTO);
+                                        friendList.setVisibility(View.GONE);
+                                    } else {
+                                        Toast.makeText(context, "친구 초대 실패", Toast.LENGTH_SHORT).show();
+                                        Log.d("친구 초대 실패", "Code: " + response.code());
+                                        friendList.setVisibility(View.GONE);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    Log.e("서버 응답 실패", t.getMessage());
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MemberDTO>> call, Throwable t) {
+                Log.e("서버 응답 실패", t.getMessage());
+            }
+        });
+
         ec.memberList(resDate, new Callback<List<MemberDTO>>() {
             @Override
             public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
                 if (response.isSuccessful()) {
                     List<MemberDTO> memberList = response.body();
-                    MemberAdapter adapter = new MemberAdapter(memberList);
-                    settingList.setAdapter(adapter);
+                    memberAdapter = new MemberAdapter(memberList);
+                    settingList.setAdapter(memberAdapter);
                 }
             }
 
@@ -174,7 +234,7 @@ public class Event extends AppCompatActivity {
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isRecyclerViewVisible) {
+                if (isSettingViewVisible) {
                     Animation slideOut = AnimationUtils.loadAnimation(context, R.anim.slide_out);
                     settingList.startAnimation(slideOut);
                     exit.startAnimation(slideOut);
@@ -196,7 +256,14 @@ public class Event extends AppCompatActivity {
                         add.setVisibility(View.VISIBLE);
                     }
                 }
-                isRecyclerViewVisible = !isRecyclerViewVisible;
+                isSettingViewVisible = !isSettingViewVisible;
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friendList.setVisibility(View.VISIBLE);
             }
         });
 
@@ -227,13 +294,6 @@ public class Event extends AppCompatActivity {
                 galleryPage.putExtra("title", resTitle);
                 galleryPage.putExtra("content", resContent);
                 startActivity(galleryPage);
-            }
-        });
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -357,6 +417,25 @@ public class Event extends AppCompatActivity {
         String path = cursor.getString(column_index);
         cursor.close();
         return path;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
 }

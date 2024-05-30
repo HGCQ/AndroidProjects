@@ -38,6 +38,10 @@ public class EventcreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventcreate);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         String regDate = "^\\d{4}-\\d{2}-\\d{2}$";
 
         this.context = this;
