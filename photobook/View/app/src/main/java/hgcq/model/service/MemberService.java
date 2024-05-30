@@ -40,12 +40,14 @@ public interface MemberService {
     @GET("/member/friend/list")
     Call<List<MemberDTO>> friendList();
 
-    @GET("/islogin")
+    @GET("/member/islogin")
     Call<Boolean> islogin();
 
 
     @GET("/member/me")
     Call<MemberDTO> me();
 
+    @GET("/member/friend/search")
+    Call<List<MemberDTO>> searchFriend(@Query("name") String name);
 
 }

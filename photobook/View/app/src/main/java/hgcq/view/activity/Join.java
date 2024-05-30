@@ -2,10 +2,13 @@ package hgcq.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +47,10 @@ public class Join extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         mc = new MemberController(this);
 
@@ -160,8 +167,6 @@ public class Join extends AppCompatActivity {
                     return;
                 }
 
-                userEmail = userEmail + "@" + email.getText().toString();
-
                 // 정규식 확인
                 if (!Pattern.matches(regEmail, userEmail)) {
                     Toast.makeText(context, "이메일 형식이 잘못됐습니다. 다시 입력하세요.", Toast.LENGTH_SHORT).show();
@@ -180,10 +185,10 @@ public class Join extends AppCompatActivity {
                 // 비밀번호 일치 확인
 
                 if (userPw.equals(userPwCheck)) {
-                    
-                    if (userEmail.equals(emailCheck)) {
 
-                        if (userName.equals(nameCheck)) {
+                    if (isNotEmailDuplicate) {
+
+                        if (isNotNameDuplicate) {
                             // 회원 가입
                             mc.createMember(new MemberDTO(userName, userEmail, userPw), new Callback<ResponseBody>() {
                                 @Override
@@ -217,5 +222,24 @@ public class Join extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }
