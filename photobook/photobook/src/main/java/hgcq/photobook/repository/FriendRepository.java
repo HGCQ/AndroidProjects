@@ -56,13 +56,26 @@ public class FriendRepository {
     }
 
     /**
+     * 친구 검색
+     *
+     * @param name 이름
+     * @return 친구
+     */
+    public List<Member> findFriendByName(String name, Member member) {
+        return em.createQuery("select f.friendMember from Friend f where f.friendMember.name LIKE :name and f.member = :member order by f.friendMember.name", Member.class)
+                .setParameter("name", "%" + name + "%")
+                .setParameter("member", member)
+                .getResultList();
+    }
+
+    /**
      * 친구 리스트 조회
      *
      * @param member 회원
      * @return 친구 리스트
      */
     public List<Member> friends(Member member) {
-        return em.createQuery("select f.friendMember from Friend f where member = :member", Member.class)
+        return em.createQuery("select f.friendMember from Friend f where member = :member order by f.friendMember.name", Member.class)
                 .setParameter("member", member)
                 .getResultList();
     }

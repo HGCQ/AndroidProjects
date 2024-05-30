@@ -104,7 +104,7 @@ public class EventController {
                     EventDTO eventDTO = memberInvitationDTO.getEventDTO();
                     MemberDTO memberDTO = memberInvitationDTO.getMemberDTO();
                     Event event = eventService.searchEventByDate(LocalDate.parse(eventDTO.getDate()), member);
-                    Member friend = memberService.findOne(memberDTO.getEmail());
+                    Member friend = memberService.findByName(memberDTO.getName());
                     if (event != null && friend != null) {
                         eventService.addMemberToEvent(event, friend);
                         return ResponseEntity.ok().body("친구 초대 성공");
