@@ -133,7 +133,7 @@
         android:clipToPadding="false"
         android:elevation="0.0000001dp"
         android:scrollbars="vertical"
-
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -147,7 +147,7 @@
         android:elevation="0.0000002dp"
         android:fontFamily="@font/font_layout"
         android:hint="Name"
-
+        android:visibility="gone"
         android:textColor="#000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -164,6 +164,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/friendplus"
         android:tint="#234567"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
