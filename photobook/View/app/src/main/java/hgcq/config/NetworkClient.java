@@ -1,7 +1,6 @@
 package hgcq.config;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -10,7 +9,6 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -24,12 +22,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * 서버와 통신 설정
- * 쿠키 저장 - saveCookie()
- * 쿠키 삭제 - deleteCookie()
- * 로그인 여부 확인 - isLogin()
- */
 public class NetworkClient {
     private static NetworkClient instance;
 
@@ -42,7 +34,7 @@ public class NetworkClient {
     private final MemberService memberService;
     private final EventService eventService;
 
-    private final String serverIp = "서버 주소";
+    private final String serverIp = "http://127.0.0.1:8080";
 
     private NetworkClient(Context context) {
         app = context.getApplicationContext();
@@ -116,7 +108,8 @@ public class NetworkClient {
     public void saveCookie() {
         NetworkClient client = NetworkClient.getInstance(app);
 
-        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+        List<Cookie> cookies = client.getCookieJar()
+                .loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
         sharedPrefsCookiePersistor.saveAll(cookies);
 
         for (Cookie ck : cookies) {
@@ -130,22 +123,11 @@ public class NetworkClient {
         }
     }
 
-    public boolean isLogin() {
-        NetworkClient client = NetworkClient.getInstance(app);
-
-        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
-        
-        for(Cookie cookie : cookies) {
-            Log.d("로그인 쿠키", cookie.name());
-        }
-
-        return !cookies.isEmpty();
-    }
-
     public void deleteCookie() {
         NetworkClient client = NetworkClient.getInstance(app);
 
-        List<Cookie> cookies = client.getCookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
+        List<Cookie> cookies = client.getCookieJar()
+                .loadForRequest(Objects.requireNonNull(HttpUrl.parse(client.getServerIp())));
         sharedPrefsCookiePersistor.removeAll(cookies);
 
         Log.d("쿠키 삭제", "성공");

@@ -1,7 +1,6 @@
 package hgcq.model.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 public class PhotoDTO implements Serializable {
 

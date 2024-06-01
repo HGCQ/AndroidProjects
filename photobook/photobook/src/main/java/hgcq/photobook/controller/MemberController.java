@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.session.Session;
-import org.springframework.session.data.redis.RedisSessionRepository;
+import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -27,7 +28,7 @@ public class MemberController {
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     private final MemberService memberService;
-    private final RedisSessionRepository sessionRepository;
+    private final SessionRepository<? extends Session> sessionRepository;
 
     // 테스트 완료
     @PostMapping("/join")
@@ -123,7 +124,10 @@ public class MemberController {
                 Member findMember = memberService.findOne(existingMember.getEmail());
 
                 if (findMember != null) {
-                    return ResponseEntity.ok(existingMember);
+                    MemberDTO memberDTO = new MemberDTO();
+                    memberDTO.setName(findMember.getName());
+                    memberDTO.setEmail(findMember.getEmail());
+                    return ResponseEntity.ok(memberDTO);
                 }
             }
         }
@@ -133,18 +137,23 @@ public class MemberController {
     @GetMapping("/islogin")
     public ResponseEntity<?> islogin(HttpServletRequest request) {
         String sessionId = null;
+        String decodedString = null;
 
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("SESSION".equals(cookie.getName())) {
                     sessionId = cookie.getValue();
+                    byte[] decodedBytes = Base64.getDecoder().decode(sessionId);
+                    decodedString = new String(decodedBytes);
+                    log.debug(sessionId);
+                    log.debug(decodedString);
                     break;
                 }
             }
         }
 
         if (sessionId != null) {
-            Session session = sessionRepository.findById(sessionId);
+            Session session = sessionRepository.findById(decodedString);
             if (session != null) {
                 return ResponseEntity.ok(true);
             }
@@ -153,19 +162,43 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
     }
 
-    // 테스트 완료
+    @GetMapping("/friend/search")
+    public ResponseEntity<?> searchFriend(@RequestParam("name") String name, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            MemberDTO owner = (MemberDTO) session.getAttribute("member");
+
+            if (owner != null) {
+                Member findMember = memberService.findOne(owner.getEmail());
+
+                if (findMember != null) {
+                    List<MemberDTO> find = memberService.searchFriend(name, findMember);
+
+                    if (find != null) {
+                        return ResponseEntity.ok(find);
+                    } else {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("친구 검색 결과 없음");
+                    }
+                }
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("세션이 존재하지 않음");
+    }
+
     @PostMapping("/friend/add")
     public ResponseEntity<?> addFriend(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         if (session != null) {
-            MemberDTO existingMember = (MemberDTO) session.getAttribute("member");
+            MemberDTO owner = (MemberDTO) session.getAttribute("member");
 
-            if (existingMember != null) {
-                Member findMember = memberService.findOne(existingMember.getEmail());
+            if (owner != null) {
+                Member findMember = memberService.findOne(owner.getEmail());
 
                 if (findMember != null) {
-                    Member friend = memberService.findOne(memberDTO.getEmail());
+                    Member friend = memberService.searchMember(memberDTO.getName());
 
                     if (friend != null) {
                         memberService.addFriend(findMember, friend);
@@ -189,7 +222,7 @@ public class MemberController {
                 Member findMember = memberService.findOne(existingMember.getEmail());
 
                 if (findMember != null) {
-                    Member friend = memberService.findOne(memberDTO.getEmail());
+                    Member friend = memberService.findByName(memberDTO.getName());
 
                     if (friend != null) {
                         memberService.deleteFriend(findMember, friend);

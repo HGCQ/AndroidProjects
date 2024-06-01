@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import hgcq.model.dto.EventDTO;
+import hgcq.model.dto.MemberDTO;
 import hgcq.view.R;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+public class EventInviteAdapter extends RecyclerView.Adapter<EventInviteAdapter.EventInviteViewHolder> {
 
-    private List<EventDTO> eventList;
+    private List<MemberDTO> friendList;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -26,19 +26,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.listener = listener;
     }
 
-    public EventAdapter(List<EventDTO> eventList) {
-        this.eventList = eventList;
+    public EventInviteAdapter(List<MemberDTO> friendList) {
+        this.friendList = friendList;
     }
 
-    public static class EventViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
-        public TextView date;
+    public static class EventInviteViewHolder extends RecyclerView.ViewHolder {
+        public TextView name;
 
-        public EventViewHolder(View view, OnItemClickListener listener) {
+        public EventInviteViewHolder(View view, OnItemClickListener listener) {
             super(view);
-            date = view.findViewById(R.id.date);
-            title = view.findViewById(R.id.title);
-
+            name = view.findViewById(R.id.name);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -55,20 +52,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View eventView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
-        return new EventViewHolder(eventView, listener);
+    public EventInviteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View eventInviteView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_member, parent, false);
+        return new EventInviteViewHolder(eventInviteView, listener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        EventDTO event = eventList.get(position);
-        holder.title.setText(event.getName());
-        holder.date.setText(event.getDate());
+    public void onBindViewHolder(@NonNull EventInviteViewHolder holder, int position) {
+        MemberDTO friend = friendList.get(position);
+        holder.name.setText(friend.getName());
     }
 
     @Override
     public int getItemCount() {
-        return eventList.size();
+        return friendList.size();
     }
 }

@@ -7,19 +7,26 @@
 
     <ImageView
         android:layout_width="46dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:src="@drawable/profile" />
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="3dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_weight="1"
-        android:fontFamily="@font/font_layout"
+        android:layout_width="242dp"
+        android:layout_height="30dp"
         android:gravity="center"
+        android:fontFamily="@font/font_layout"
         android:text="name"
         android:textColor="#000"
-        android:textSize="17sp" />
+        android:textSize="15sp" />
+
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#00000000"
+        android:scaleType="fitCenter"
+        android:src="@drawable/remove"
+        android:tint="#FF0000" />
 
 </LinearLayout>

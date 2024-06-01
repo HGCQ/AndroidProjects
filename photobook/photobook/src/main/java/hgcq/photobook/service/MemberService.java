@@ -2,6 +2,7 @@ package hgcq.photobook.service;
 
 import hgcq.photobook.domain.Friend;
 import hgcq.photobook.domain.Member;
+import hgcq.photobook.dto.MemberDTO;
 import hgcq.photobook.repository.FriendRepository;
 import hgcq.photobook.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,18 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-
-/**
- * 회원 가입
- * 로그인
- * 로그아웃
- * 회원 검색
- * 회원 정보 수정
- * 친구 추가
- * 친구 삭제
- * 친구 리스트 조회
- */
 
 @Service
 @Transactional(readOnly = true)
@@ -34,12 +25,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final FriendRepository friendRepository;
 
-    /**
-     * 회원 가입
-     *
-     * @param member 회원
-     * @return 회원 id
-     */
     @Transactional
     @Synchronized
     public Long join(Member member) {
@@ -61,13 +46,7 @@ public class MemberService {
         return member.getId();
     }
 
-    /**
-     * 로그인
-     *
-     * @param email    회원 email
-     * @param password 회원 password
-     * @return 회원
-     */
+
     public Member login(String email, String password) {
         List<String> emails = memberRepository.findEmail();
 
@@ -87,12 +66,6 @@ public class MemberService {
         }
     }
 
-    /**
-     * 회원 조회
-     *
-     * @param email 회원 이메일
-     * @return 회원
-     */
     public Member findOne(String email) {
         List<String> emails = memberRepository.findEmail();
 
@@ -105,6 +78,17 @@ public class MemberService {
         return memberRepository.findOne(email);
     }
 
+    public Member findByName(String name) {
+        List<Member> find = memberRepository.findByName(name);
+
+        if (find.isEmpty()) {
+            log.error("조회 실패 : 존재하지 않는 회원");
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        }
+
+        return find.get(0);
+    }
+
     /**
      * 회원 정보 수정
      *
@@ -114,8 +98,12 @@ public class MemberService {
     public void update(Member member) {
         Member findMember = memberRepository.findOne(member.getEmail());
 
-        findMember.setName(member.getName());
-        findMember.setPassword(member.getPassword());
+        if (member.getName() != null) {
+            findMember.setName(member.getName());
+        }
+        if (member.getPassword() != null) {
+            findMember.setPassword(member.getPassword());
+        }
 
         log.debug("회원 정보 수정 성공");
         memberRepository.save(findMember);
@@ -141,6 +129,17 @@ public class MemberService {
     public boolean duplicateName(String name) {
         List<String> names = memberRepository.findName();
         return !names.contains(name);
+    }
+
+    public Member searchMember(String name) {
+        List<Member> find = memberRepository.findByName(name);
+
+        if (find.isEmpty()) {
+            log.error("회원이 존재하지 않습니다.");
+            throw new IllegalArgumentException("회원이 존재하지 않습니다");
+        }
+
+        return find.get(0);
     }
 
     /**
@@ -198,6 +197,32 @@ public class MemberService {
         friendRepository.delete(find1);
         friendRepository.delete(find2);
         log.debug("친구 삭제 성공");
+    }
+
+    /**
+     * 친구 이름으로 검색
+     *
+     * @param name 이름
+     * @return 친구
+     */
+    public List<MemberDTO> searchFriend(String name, Member member) {
+        List<Member> find = friendRepository.findFriendByName(name, member);
+
+        if (find.isEmpty()) {
+            log.debug("친구가 존재하지 않음");
+            throw new IllegalArgumentException("친구가 존재하지 않습니다.");
+        }
+
+        List<MemberDTO> memberList = new ArrayList<>();
+
+        for (Member m : find) {
+            MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setName(m.getName());
+            memberDTO.setEmail(m.getEmail());
+            memberList.add(memberDTO);
+        }
+
+        return memberList;
     }
 
     /**

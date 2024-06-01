@@ -1,6 +1,5 @@
 package hgcq.photobook.domain;
 
-import hgcq.photobook.dto.FriendId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

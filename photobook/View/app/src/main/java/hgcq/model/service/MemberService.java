@@ -30,19 +30,24 @@ public interface MemberService {
     @GET("/member/duplicate/email")
     Call<Boolean> duplicateEmail(@Query("email") String email);
 
+    @POST("/member/friend/delete")
+    Call<ResponseBody> deleteFriend(@Body MemberDTO memberDTO);
+
     @POST("/member/friend/add")
     Call<ResponseBody> addFriend(@Body MemberDTO memberDTO);
 
-    @POST("/member/friend/delete")
-    Call<ResponseBody> deleteFriend(@Body MemberDTO memberDTO);
 
     @GET("/member/friend/list")
     Call<List<MemberDTO>> friendList();
 
-    @GET("/member/me")
-    Call<MemberDTO>me();
+    @GET("/member/islogin")
+    Call<Boolean> islogin();
 
-    @GET("/islogin")
-    Call<Boolean>islogin();
+
+    @GET("/member/me")
+    Call<MemberDTO> me();
+
+    @GET("/member/friend/search")
+    Call<List<MemberDTO>> searchFriend(@Query("name") String name);
 
 }

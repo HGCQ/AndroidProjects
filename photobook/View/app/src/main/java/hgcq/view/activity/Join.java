@@ -2,15 +2,14 @@ package hgcq.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 
 import android.widget.Toast;
 
@@ -45,6 +44,10 @@ public class Join extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         mc = new MemberController(this);
 
         String regName = "^[가-힣A-Za-z0-9]{1,8}$";
@@ -56,9 +59,9 @@ public class Join extends AppCompatActivity {
         back = (ImageButton) findViewById(R.id.back);
         email = (EditText) findViewById(R.id.email);
         join = (ImageButton) findViewById(R.id.join);
-        emailCheck=(ImageButton)findViewById(R.id.emailCheck);
+        emailCheck = (ImageButton) findViewById(R.id.emailCheck);
         pwdCheck = (EditText) findViewById(R.id.passwordCheck);
-        nameCheck=(ImageButton)findViewById(R.id.nameCheck);
+        nameCheck = (ImageButton) findViewById(R.id.nameCheck);
         pwd = (EditText) findViewById(R.id.password);
         name = (EditText) findViewById(R.id.name);
 
@@ -72,11 +75,15 @@ public class Join extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if (response.isSuccessful()) {
-                            if (response.body()) {
-                                isNotNameDuplicate = true;
-                                Toast.makeText(context, "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                            if (Pattern.matches(regName, userName)) {
+                                if (response.body()) {
+                                    isNotNameDuplicate = true;
+                                    Toast.makeText(context, "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "중복된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(context, "중복된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "닉네임 형식이 잘못됐습니다.", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(context, "중복된 닉네임입니다.", Toast.LENGTH_SHORT).show();
@@ -100,26 +107,24 @@ public class Join extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if (response.isSuccessful()) {
-
-
-                            if (response.body()) {
-                                // 응답 본문이 true인 경우 실행할 로직
-                                // 예: 작업 성공 처리
-                                isNotEmailDuplicate = true;
-                                Toast.makeText(context, "사용 가능 이메일입니다.", Toast.LENGTH_SHORT).show();
+                            if (Pattern.matches(regEmail, userEmail)) {
+                                if (response.body()) {
+                                    isNotEmailDuplicate = true;
+                                    Toast.makeText(context, "사용 가능 이메일입니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "중복된 이메일입니다.", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(context, "중복된 이메일입니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "이메일 형식이 잘못됐습니다.", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(context, "중복된 이메일 입니다.", Toast.LENGTH_SHORT).show();
                         }
-
                     }
 
                     @Override
                     public void onFailure(Call<Boolean> call, Throwable t) {
                         Toast.makeText(context, "통신 실패.", Toast.LENGTH_SHORT).show();
-
                     }
                 });
             }
@@ -142,7 +147,11 @@ public class Join extends AppCompatActivity {
                 String userName = name.getText().toString();
 
                 // 비어 있는지 확인
-                if (userEmail.isEmpty()) {
+                if (userName.isEmpty()) {
+                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    name.requestFocus();
+                    return;
+                } else if (userEmail.isEmpty()) {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     email.requestFocus();
                     return;
@@ -154,36 +163,22 @@ public class Join extends AppCompatActivity {
                     Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
                     pwdCheck.requestFocus();
                     return;
-                } else if (userName.isEmpty()) {
-                    Toast.makeText(context, "값을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    name.requestFocus();
-                    return;
                 }
 
-                userEmail = userEmail + "@" + email.getText().toString();
-
                 // 정규식 확인
-                if (!Pattern.matches(regEmail, userEmail)) {
-                    Toast.makeText(context, "이메일 형식이 잘못됐습니다. 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-                    email.requestFocus();
-                    return;
-                } else if (!Pattern.matches(regPw, userPw)) {
+                if (!Pattern.matches(regPw, userPw)) {
                     Toast.makeText(context, "비밀번호 형식이 잘못됐습니다. 다시 입력하세요.", Toast.LENGTH_SHORT).show();
                     pwd.requestFocus();
-                    return;
-                } else if (!Pattern.matches(regName, userName)) {
-                    Toast.makeText(context, "닉네임 형식이 잘못됐습니다. 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-                    name.requestFocus();
                     return;
                 }
 
                 // 비밀번호 일치 확인
 
                 if (userPw.equals(userPwCheck)) {
-                    
-                    if (userEmail.equals(emailCheck)) {
 
-                        if (userName.equals(nameCheck)) {
+                    if (isNotEmailDuplicate) {
+
+                        if (isNotNameDuplicate) {
                             // 회원 가입
                             mc.createMember(new MemberDTO(userName, userEmail, userPw), new Callback<ResponseBody>() {
                                 @Override
@@ -204,10 +199,10 @@ public class Join extends AppCompatActivity {
                                     Log.e("회원 가입 실패", t.getMessage());
                                 }
                             });
-                        }else{
+                        } else {
                             Toast.makeText(context, "이름이 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
+                    } else {
                         Toast.makeText(context, "이메일이 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -217,5 +212,24 @@ public class Join extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

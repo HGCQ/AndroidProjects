@@ -47,6 +47,7 @@
         android:scaleType="fitCenter"
         android:text="2000-00-00"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

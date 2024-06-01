@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#AEC8DF"
-    tools:context=".activity.Join">
+    tools:context=".activity.Modify">
 
     <ImageView
         android:layout_width="113dp"
@@ -34,7 +34,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:text="서비스 이용을 위해 정보 수정 해주세요"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
@@ -49,16 +49,16 @@
         android:id="@+id/back"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/backicon"
-        android:background="#00000000"
-        app:tint="#234567"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005" />
+        app:layout_constraintVertical_bias="0.005"
+        app:tint="#234567" />
 
 
     <EditText
@@ -66,10 +66,11 @@
         android:layout_width="310dp"
         android:layout_height="48dp"
         android:background="@android:drawable/editbox_background"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:hint="특수문자 제외 8자 이하"
         android:inputType="text"
         android:maxLength="8"
+        android:textColor="#000000"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,26 +83,27 @@
         android:id="@+id/save"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/saveicon"
-        android:background="#00000000"
-        app:tint="#234567"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1" />
+        app:layout_constraintVertical_bias="1"
+        app:tint="#234567" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="360dp"
         android:layout_height="48dp"
         android:background="@android:drawable/editbox_background"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:hint="문자, 숫자, 특수문자 포함 8~20자"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:maxLength="20"
+        android:textColor="#000000"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,7 +115,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:text="비밀번호"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,9 +130,12 @@
         android:layout_height="48dp"
         android:background="@android:drawable/editbox_background"
         android:ems="9"
+        android:fontFamily="@font/font_layout"
         android:importantForAccessibility="no"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:maxLength="20"
+        android:textColor="#000000"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.568"
@@ -141,7 +146,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:text="비밀번호 확인"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -153,7 +158,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:text="닉네임"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -166,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:text="Recorder"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -195,7 +200,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font1"
+        android:fontFamily="@font/font_layout"
         android:text="Check"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
