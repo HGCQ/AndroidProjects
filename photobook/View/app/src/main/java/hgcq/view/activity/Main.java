@@ -3,8 +3,10 @@ package hgcq.view.activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,12 +25,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import hgcq.adapter.EventAdapter;
-import hgcq.adapter.MemberAdapter;
 import hgcq.config.NetworkClient;
 import hgcq.controller.EventController;
 import hgcq.controller.MemberController;
 import hgcq.model.dto.EventDTO;
-import hgcq.model.dto.MemberDTO;
 import hgcq.view.R;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -54,6 +54,10 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         this.context = this;
         ec = new EventController(this);
         mc = new MemberController(this);
@@ -74,6 +78,8 @@ public class Main extends AppCompatActivity {
         Intent eventCreatePage = new Intent(this, EventcreateActivity.class);
         Intent eventPage = new Intent(this, Event.class);
         Intent loginPage = new Intent(this, Login.class);
+        Intent friendPage = new Intent(this, Friend.class);
+        Intent modifyPage = new Intent(this, Modify.class);
 
         ec.eventList(new Callback<List<EventDTO>>() {
             @Override
@@ -101,6 +107,20 @@ public class Main extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<EventDTO>> call, Throwable t) {
                 Log.e("서버 응답 실패", t.getMessage());
+            }
+        });
+
+        friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(friendPage);
+            }
+        });
+
+        modify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(modifyPage);
             }
         });
 
@@ -263,5 +283,24 @@ public class Main extends AppCompatActivity {
                 startActivity(eventCreatePage);
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

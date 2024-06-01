@@ -63,6 +63,7 @@ public class Event extends AppCompatActivity {
     // Config
     private boolean isSettingViewVisible = false;
     private boolean isOwner = false;
+    private boolean isFriendListEmpty = false;
     private Context context;
     private NetworkClient client;
     private EventInviteAdapter eventInviteAdapter;
@@ -155,6 +156,9 @@ public class Event extends AppCompatActivity {
             public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
                 if (response.isSuccessful()) {
                     List<MemberDTO> friends = response.body();
+                    if (friends.isEmpty()) {
+                        isFriendListEmpty = true;
+                    }
                     eventInviteAdapter = new EventInviteAdapter(friends);
                     friendList.setAdapter(eventInviteAdapter);
                     eventInviteAdapter.setOnItemClickListener(new EventInviteAdapter.OnItemClickListener() {
@@ -263,7 +267,11 @@ public class Event extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friendList.setVisibility(View.VISIBLE);
+                if (!isFriendListEmpty) {
+                    friendList.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(context, "친구가 없습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

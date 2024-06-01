@@ -114,6 +114,12 @@ public class EventService {
             throw new IllegalArgumentException("친구가 존재하지 않습니다.");
         }
 
+        List<LocalDate> events = eventMemberRepository.findEventsToDate(friend);
+        if (events.contains(event.getDate())) {
+            log.error("친구 초대 실패 : 이미 존재하는 날짜");
+            throw new IllegalArgumentException("이미 존재하는 날짜입니다.");
+        }
+
         log.debug("친구 초대 성공");
         eventMemberRepository.save(new EventMember(event.getId(), friend.getId()));
     }

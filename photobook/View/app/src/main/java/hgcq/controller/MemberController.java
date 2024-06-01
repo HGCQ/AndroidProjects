@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.List;
 
 import hgcq.config.NetworkClient;
-import hgcq.model.dto.EventDTO;
 import hgcq.model.dto.MemberDTO;
 import hgcq.model.service.MemberService;
 import okhttp3.ResponseBody;
