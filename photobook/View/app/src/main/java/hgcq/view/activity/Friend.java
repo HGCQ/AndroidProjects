@@ -163,7 +163,7 @@ public class Friend extends AppCompatActivity {
         /**
          * "save" 버튼에 대한 클릭 이벤트 처리
          */
-        
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

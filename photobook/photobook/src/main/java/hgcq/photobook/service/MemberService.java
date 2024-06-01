@@ -98,8 +98,12 @@ public class MemberService {
     public void update(Member member) {
         Member findMember = memberRepository.findOne(member.getEmail());
 
-        findMember.setName(member.getName());
-        findMember.setPassword(member.getPassword());
+        if (member.getName() != null) {
+            findMember.setName(member.getName());
+        }
+        if (member.getPassword() != null) {
+            findMember.setPassword(member.getPassword());
+        }
 
         log.debug("회원 정보 수정 성공");
         memberRepository.save(findMember);

@@ -5,7 +5,6 @@ import hgcq.photobook.domain.EventMember;
 import hgcq.photobook.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

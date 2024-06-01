@@ -4,10 +4,6 @@ spring:
     username: mangjun
     password: audjun510
     url: jdbc:mysql://localhost:3306/photobook
-#    url: jdbc:h2:tcp://localhost/~/photobook
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:

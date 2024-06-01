@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-import hgcq.config.NetworkClient;
 import hgcq.controller.MemberController;
 import hgcq.view.R;
 import retrofit2.Call;

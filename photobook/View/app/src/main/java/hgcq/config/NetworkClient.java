@@ -34,7 +34,7 @@ public class NetworkClient {
     private final MemberService memberService;
     private final EventService eventService;
 
-    private final String serverIp = "서버 주소";
+    private final String serverIp = "http://127.0.0.1:8080";
 
     private NetworkClient(Context context) {
         app = context.getApplicationContext();
