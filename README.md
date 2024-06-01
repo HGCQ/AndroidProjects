@@ -29,14 +29,16 @@
 
 - Front : Android Studio(Iguana)
 - Back-end : Spring Boot(3.2.5)
+- Database : MySQL, Redis
 - 버전 및 이슈 관리 : Git, Github
 - 협업 툴 : Notion
 
 ### 📅 개발 기간
 
 - 전체 개발 기간 : 2024.04.30 ~ 2024.06.03
-- UI 구현 : 2024.04.30 ~ 2024.05.26
-- 기능 구현 : 2024.04.30 ~ 2024.06.03
+- UI 구현 : 2024.04.30 ~ 2024.05.30
+- 기능 구현 : 2024.04.30 ~ 2024.05.30
+- 테스트 : 2024.06.01 ~ 2024.06.02
 
 ### 🖊️ 브랜치 전략
 
@@ -105,7 +107,7 @@
 ## 🔧 페이지별 기능
 
 ### Loading Page
-![Loading](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EB%A1%9C%EB%94%A9%ED%99%94%EB%A9%B4.png)
+![Loading](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EB%A1%9C%EB%94%A9%ED%99%94%EB%A9%B4.png)
 
 <br>
 
@@ -113,7 +115,7 @@
 이미지를 클릭하면 **만약 로그인 되어있다면,** 메인 페이지로 이동, **아니라면** 로그인 페이지로 이동된다.
 
 ### Login Page
-![Login](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EB%A1%9C%EA%B7%B8%EC%9D%B8%ED%99%94%EB%A9%B4.png)
+![Login](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EB%A1%9C%EA%B7%B8%EC%9D%B8%ED%99%94%EB%A9%B4.png)
 
 <br>
 
@@ -121,7 +123,7 @@
 이메일과 패스워드로 로그인 가능하며, 입력 후 Login 버튼을 누르면 로그인되고 메인 페이지로 이동, Join 버튼을 누르면 회원가입 페이지로 이동된다.
 
 ### Join Page
-![Join](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%ED%99%94%EB%A9%B4.png)
+![Join](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%ED%99%94%EB%A9%B4.png)
 
 <br>
 
@@ -132,40 +134,52 @@
 <br>
 
 ### Main Page
-![Main1](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EB%A9%94%EB%89%B4%ED%99%94%EB%A9%B41.png)
+![Main1](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EB%A9%94%EB%89%B4%ED%99%94%EB%A9%B41.png)
 
 <br>
 
-![Main2](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EB%A9%94%EB%89%B4%ED%99%94%EB%A9%B42.png)
+![Main2](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EB%A9%94%EB%89%B4%ED%99%94%EB%A9%B42.png)
 
 <br>
 
-![Main3](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EB%A9%94%EB%89%B4%ED%99%94%EB%A9%B43.png)
+![Main3](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EB%A9%94%EB%89%B4%ED%99%94%EB%A9%B43.png)
 
 <br>
 
 설명: 메인 화면   
-이벤트를 날짜 또는 이름으로 검색할 수 있고 친구 페이지와, 회원 정보 수정 페이지, 로그아웃을 할 수 있다.   
+이벤트를 날짜 또는 이름으로 검색할 수 있고 친구 페이지와 회원 정보 수정 페이지로 이동할 수 있고, 로그아웃을 할 수 있다.   
 이벤트는 날짜 순으로 정렬되어 있으며, 클릭할 시 이벤트 페이지로 이동된다.   
 밑에 있는 추가 버튼을 누르면 이벤트 생성 페이지로 이동된다.   
 
 <br>
 
 ### Friend Page
-![]()
+![Friend1](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%B9%9C%EA%B5%AC%ED%99%94%EB%A9%B41.png)
+
+<br>
+
+![Friend2](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%B9%9C%EA%B5%AC%ED%99%94%EB%A9%B42.png)
+
+<br>
+
+![Friend3](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%B9%9C%EA%B5%AC%ED%99%94%EB%A9%B43.png)
 
 <br>
 
 설명: 친구 화면   
+회원 닉네임으로 친구를 추가할 수 있다. 현재 친구인 회원의 리스트가 오름차순으로 정렬되어 보여진다.   
+이름 옆에 - 버튼을 누르면 친구를 삭제할 수 있다.   
 
 <br>
 
 ### Modify Page
-![]()
+![Modify1](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%A0%95%EB%B3%B4%EC%88%98%EC%A0%95%ED%99%94%EB%A9%B4.png)
 
 <br>
 
 설명: 회원 정보 수정 화면   
+닉네임과 패스워드를 수정할 수 있는 페이지이다.   
+둘 다 변경할 수 있고, 닉네임만 변경하려면 닉네임만 입력 후 중복 확인을 해야하고, 패스워드만 바꾸려면 패스워드와 패스워드 확인만 입력하고 밑에 확인 버튼을 누르면 된다.   
 
 <br>
 
@@ -181,11 +195,27 @@
 <br>
 
 ### Event Page
-![]()
+![Event1](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%9D%B4%EB%B2%A4%ED%8A%B8%ED%99%94%EB%A9%B41.png)
+
+<br>
+
+![Event2](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%9D%B4%EB%B2%A4%ED%8A%B8%ED%99%94%EB%A9%B42.png)
+
+<br>
+
+![Event3](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%9D%B4%EB%B2%A4%ED%8A%B8%ED%99%94%EB%A9%B43.png)
+
+<br>
+
+![Event4](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%9D%B4%EB%B2%A4%ED%8A%B8%ED%99%94%EB%A9%B44.png)
 
 <br>
 
 설명: 이벤트 화면   
+친구들과 사진을 공유할 수 있는 커뮤니티 페이지이다.   
+갤러리 버튼을 누르면 갤러리로 들어가져서 사진 클릭 시 사진이 공유 앨범에 추가된다.   
+이벤트를 만든 사람만 추가 버튼이 나오며 친구를 초대할 수 있다.   
+중간에 있는 사진을 클릭 시에 갤러리 화면으로 이동된다.
 
 <br>
 
@@ -221,6 +251,7 @@
 ## 프로젝트 후기
 
 ### 👦 김명준
+처음 해보는 안드로이드 프로젝트여서 처음엔 막막했지만 한달간의 시간동안 팀원들과 함께 공부하면서 진행하다보니 완성도 있게 프로젝트를 마친 것 같다.
 
 <br>
 
