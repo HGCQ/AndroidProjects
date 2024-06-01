@@ -220,11 +220,11 @@
 <br>
 
 ### Gallery Page
-![Gallery1](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EA%B0%A4%EB%9F%AC%EB%A6%AC%ED%99%94%EB%A9%B41.png)
+![Gallery1](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EA%B0%A4%EB%9F%AC%EB%A6%AC%ED%99%94%EB%A9%B41.png)
 
 <br>
 
-![Gallery2](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EA%B0%A4%EB%9F%AC%EB%A6%AC%ED%99%94%EB%A9%B42.png)
+![Gallery2](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EA%B0%A4%EB%9F%AC%EB%A6%AC%ED%99%94%EB%A9%B42.png)
 
 <br>
 
@@ -234,11 +234,11 @@
 <br>
 
 ### Photo Page
-![Photo1](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EC%82%AC%EC%A7%84%ED%99%94%EB%A9%B41.png)
+![Photo1](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%82%AC%EC%A7%84%ED%99%94%EB%A9%B41.png)
 
 <br>
 
-![Photo2](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EC%82%AC%EC%A7%84%ED%99%94%EB%A9%B42.png)
+![Photo2](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%82%AC%EC%A7%84%ED%99%94%EB%A9%B42.png)
 
 <br>
 
