@@ -184,7 +184,7 @@
 <br>
 
 ### Event Create Page
-![EventCreate](https://github.com/HGCQ/AndroidProjects/blob/develop/Image/%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%83%9D%EC%84%B1%ED%99%94%EB%A9%B4.png)
+![EventCreate](https://github.com/HGCQ/AndroidProjects/blob/main/Image/%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%83%9D%EC%84%B1%ED%99%94%EB%A9%B4.png)
 
 <br>
 
